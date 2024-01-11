@@ -1,9 +1,8 @@
-import { ThemeProvider } from '@znui/react'
 import { Html, Head, Main, NextScript } from 'next/document'
 
 export default function Document() {
   return (
-    <ThemeProvider scheme='system'>
+   
         <Html lang="en">
           <Head />
           <body>
@@ -11,6 +10,6 @@ export default function Document() {
             <NextScript />
           </body>
         </Html>
-        </ThemeProvider>
+        
   )
 }
