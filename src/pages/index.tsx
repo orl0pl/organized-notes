@@ -4,7 +4,8 @@ import styles from "@/styles/Home.module.css";
 import { Button, LayoutWithNavigationBar, NavigationBar, Text, ThemeProvider, useTheme } from "md3-react";
 import { Ribeye, Roboto } from "next/font/google";
 import { useEffect, useState } from "react";
-import { mdiAbTesting, mdiGlobeModel, mdiHome } from "@mdi/js";
+import { mdiAbTesting, mdiGlobeModel, mdiHome, mdiWeatherNight, mdiWeatherSunny } from "@mdi/js";
+import { hexFromArgb } from "@material/material-color-utilities";
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500"] });
 
 export default function Home() {
@@ -27,7 +28,8 @@ export default function Home() {
     <NavigationBar horizontal={true} segments={[{icon: mdiHome, label: "Strona główna"}]}></NavigationBar>
       <main
       style={{
-        backgroundColor: "#" + scheme.background.toString(16),
+        backgroundColor: hexFromArgb(scheme.background),
+        padding: 16
       }}
     >
       
@@ -39,12 +41,13 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Button
+        icon={theme === "dark" ? mdiWeatherSunny : mdiWeatherNight}
           onClick={() => {
             toggleTheme();
             console.log(theme);
           }}
         >
-          Theme #{scheme.background.toString(16)}
+          Zmień motyw na {theme === "dark" ? "jasny" : "ciemny"}
         </Button>
         <Button
           onClick={() => {

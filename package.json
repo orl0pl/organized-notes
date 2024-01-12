@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@material/material-color-utilities": "^0.2.7",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "@next/font": "^14.0.4",
