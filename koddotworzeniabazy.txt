@@ -1,0 +1,80 @@
+CREATE TABLE Notatki (
+    id INT PRIMARY KEY,
+    folder INT,
+    nazwa VARCHAR(255),
+    ostatnia_wersja INT,
+    osoba INT,
+    czas DATETIME,
+    UNIQUE(id, folder),
+    FOREIGN KEY (folder) REFERENCES Folder(id),
+    FOREIGN KEY (osoba) REFERENCES Osoba(id),
+    FOREIGN KEY (ostatnia_wersja) REFERENCES Notatki(id) ON DELETE SET NULL
+);
+
+CREATE TABLE Folder (
+    id INT PRIMARY KEY,
+    rodzic INT,
+    nazwa VARCHAR(255),
+    osoba INT,
+    UNIQUE(id, rodzic),
+    FOREIGN KEY (rodzic) REFERENCES Folder(id) ON DELETE SET NULL,
+    FOREIGN KEY (osoba) REFERENCES Osoba(id)
+);
+
+CREATE TABLE Osoba (
+    id INT PRIMARY KEY,
+    nazwa VARCHAR(255) UNIQUE,
+    login VARCHAR(64) UNIQUE,
+    haslo VARCHAR(64) UNIQUE,
+    salt VARCHAR(4),
+    tworzenieFolderu BOOL,
+    edytowanieFolderow BOOL,
+    dodawanieNotatek BOOL,
+    edytowanieCudzychNotatek BOOL,
+    dodawanieMultimediów BOOL,
+    edytowanieCudzychMultimediów BOOL,
+    administrator BOOL
+);
+
+CREATE TABLE Sesja (
+    id VARCHAR(256) PRIMARY KEY,
+    osoba INT,
+    wygasa DATETIME DEFAULT CURRENT_TIMESTAMP + INTERVAL 1 WEEK,
+    FOREIGN KEY (osoba) REFERENCES Osoba(id)
+);
+
+CREATE TABLE Multimedia (
+    id INT PRIMARY KEY,
+    osoba INT,
+    utworzone DATETIME,
+    folder INT,
+    dane VARCHAR(255),
+    FOREIGN KEY (osoba) REFERENCES Osoba(id),
+    FOREIGN KEY (folder) REFERENCES Folder(id)
+);
+
+CREATE TABLE Dostep (
+    folder INT,
+    osoba INT,
+    edycja BOOL,
+    usuwanie BOOL,
+    PRIMARY KEY (folder, osoba),
+    FOREIGN KEY (folder) REFERENCES Folder(id),
+    FOREIGN KEY (osoba) REFERENCES Osoba(id)
+);
+
+CREATE TABLE TagNotatki (
+    idNotatki INT,
+    klucz VARCHAR(255),
+    wartosc VARCHAR(255),
+    PRIMARY KEY (idNotatki, klucz),
+    FOREIGN KEY (idNotatki) REFERENCES Notatki(id)
+);
+
+CREATE TABLE TagFolderu (
+    idFolderu INT,
+    klucz VARCHAR(255),
+    wartosc VARCHAR(255),
+    PRIMARY KEY (idFolderu, klucz),
+    FOREIGN KEY (idFolderu) REFERENCES Folder(id)
+);

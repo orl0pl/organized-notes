@@ -1,0 +1,33 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    
+}
+
+.app {
+    flex-direction: row;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+}
+
+@media screen and (max-width: 700px) {
+    .app {
+        flex-direction: column-reverse;
+    }
+}
+
+
+
+
+main {
+    flex: 1;
+}
+
+/* main {
+    height: 100vh;
+} */
