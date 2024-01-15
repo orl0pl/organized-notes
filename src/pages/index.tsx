@@ -9,7 +9,7 @@ const roboto = Roboto({ subsets: ['latin'], weight: ["400", "500"] })
 
 
 export default function Home() {
-  const { updateSourceColor, scheme, toggleTheme } = useTheme();
+  const { updateSourceColor, scheme, toggleMode } = useTheme();
   const [color, setColor] = useState('#ff0000')
   return (
     <main style={{
@@ -22,7 +22,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Button onClick={()=>{toggleTheme(); console.log('aaa')}}>Theme #{scheme.background.toString(16)}</Button>
+      <Button onClick={()=>{toggleMode(); console.log('aaa')}}>Theme #{scheme.background.toString(16)}</Button>
       <Button onClick={color === '#ff0000' ? ()=>{updateSourceColor('#0000ff'); setColor('#ff0000')} : ()=>{updateSourceColor('#f00'); setColor('#ff0000')}}>Enabled {color}</Button>
       <Text type='displayLarge'>AA</Text>
       {/* <h1 style={{ color: ThemeTokens.error }}>AA</h1> */}
