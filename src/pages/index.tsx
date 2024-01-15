@@ -4,7 +4,7 @@ import styles from "@/styles/Home.module.css";
 import { Button, LayoutWithNavigationBar, NavigationBar, Text, ThemeProvider, useTheme } from "md3-react";
 import { Ribeye, Roboto } from "next/font/google";
 import { useEffect, useState } from "react";
-import { mdiAbTesting, mdiGlobeModel, mdiHome, mdiWeatherNight, mdiWeatherSunny } from "@mdi/js";
+import { mdiAbTesting, mdiCog, mdiGlobeModel, mdiHome, mdiWeatherNight, mdiWeatherSunny } from "@mdi/js";
 import { hexFromArgb } from "@material/material-color-utilities";
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500"] });
 
@@ -25,7 +25,9 @@ export default function Home() {
   }, []);
   return (
     <div className={"app "+roboto.className}>
-    <NavigationBar horizontal={true} segments={[{icon: mdiHome, label: "Strona główna"}]}></NavigationBar>
+    <NavigationBar horizontal={true} segments={[{icon: mdiHome, label: "Strona główna"}, {icon: mdiCog, label: "Ustawienia"}]}>
+      
+    </NavigationBar>
       <main
       style={{
         backgroundColor: hexFromArgb(scheme.background),
