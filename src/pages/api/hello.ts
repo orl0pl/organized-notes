@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import crypto from 'crypto'
 import db from '../../utils/db';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -11,11 +12,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const result = await db.query('SELECT * FROM Osoba');
       res.status(200).json(result.rows);
     } else if (method === 'POST') {
+      const salt = crypto.randomBytes(2).toString('base64')
       const {
         nazwa,
         login,
         haslo,
-        salt,
         tworzenieFolderu,
         edytowanieFolderow,
         dodawanieNotatek,
@@ -33,7 +34,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         [
           nazwa,
           login,
-          haslo,
+          crypto.createHash('sha256').update(haslo+salt).digest().toString('base64'),
           salt,
           tworzenieFolderu,
           edytowanieFolderow,

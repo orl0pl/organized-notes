@@ -28,6 +28,10 @@ main {
     flex: 1;
 }
 
+
+h1, h2 {
+    font-weight: 400;
+}
 /* main {
     height: 100vh;
 } */

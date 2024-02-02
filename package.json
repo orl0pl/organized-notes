@@ -13,6 +13,7 @@
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "@next/font": "^14.0.4",
+    "@receter/my-component-library": "^0.0.1",
     "@types/node": "20.10.8",
     "@types/react": "18.2.47",
     "@types/react-dom": "18.2.18",

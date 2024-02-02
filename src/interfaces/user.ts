@@ -3,7 +3,7 @@ interface User {
     nazwa: string;
     login: string;
     haslo: string;
-    salt: string;
+    salt?: string;
     tworzenieFolderu: boolean;
     edytowanieFolderow: boolean;
     dodawanieNotatek: boolean;
