@@ -64,7 +64,9 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           )) : <p>No folders</p>}
 
         </div>
-
+        <pre>
+            {JSON.stringify(folders, null, 2)}
+          </pre>
 
 
 

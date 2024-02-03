@@ -37,24 +37,41 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         // Retrieve all folders
         try {
             var result;
-            if (typeof query.name === "string" || query.name !== undefined && (query.name.length >= 1)) {
+            var parentId;
+            if (query.name === undefined || query.name.length === 0) {
+                result = await db.query(`SELECT * FROM Folder WHERE rodzic IS NULL;`);
+                parentId = null;
+            }
+            else if (typeof query.name === "string" || (query.name.length === 1)) {
                 result = await db.query(`SELECT id, nazwa
                 FROM Folder
-                WHERE rodzic = (SELECT id FROM Folder WHERE nazwa = $1);
+                WHERE rodzic = (SELECT id FROM Folder WHERE nazwa = $1 AND rodzic IS NULL);
+                
                 `, [query.name[0] || query.name]);
+                var parentIdDbResult = await db.query(`SELECT id FROM Folder WHERE nazwa = $1 AND rodzic IS NULL`, [query.name[0] || query.name]);
+                
+                parentId = parentIdDbResult.rows[0].id;
             }
             else {
-                result = await db.query(`
-            WITH RECURSIVE FolderCTE AS (
-              SELECT * FROM Folder WHERE nazwa IN ($1)
-              UNION
-              SELECT f.* FROM Folder f
+                var parentIdDbResult = await db.query(`
+                WITH RECURSIVE FolderCTE AS (
+                    SELECT * FROM Folder WHERE nazwa IN ($1)
+                    UNION
+                    SELECT f.* FROM Folder f
               INNER JOIN FolderCTE cte ON f.rodzic = cte.id
             )
-            SELECT * FROM FolderCTE;
-          `, [query.name?.join(',')]);
+                  SELECT id FROM FolderCTE;
+                `, [query.name?.join(',')]);
+
+                parentId = parentIdDbResult.rows[0].id;
+
+                result = await db.query(`SELECT * FROM Folder WHERE rodzic = $1;`, [parentIdDbResult]);
+
+
+
+                // console.log('idk', query.name?.join(','))
             }
-            res.status(200).json(result.rows);
+            res.status(200).json({ result: result.rows, parentId });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Internal server error', error });

@@ -12,11 +12,11 @@ CREATE TABLE Notatki (
 );
 
 CREATE TABLE Folder (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     rodzic INT,
     nazwa VARCHAR(255),
     osoba INT,
-    UNIQUE(id, nazwa),
+    UNIQUE(rodzic, nazwa),
     CHECK(id <> rodzic),
     FOREIGN KEY (rodzic) REFERENCES Folder(id) ON DELETE RESTRICT,
     FOREIGN KEY (osoba) REFERENCES Osoba(id)
