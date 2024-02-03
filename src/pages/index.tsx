@@ -11,38 +11,14 @@ import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from "n
 import Cookies from "cookies";
 import { db } from "@vercel/postgres";
 import User from "@/interfaces/user";
+import { sessionServerSideProps } from "@/utils/session";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500"] });
 
-export async function getServerSideProps({ req, res }: GetServerSidePropsContext) {
-  const cookies = new Cookies(req, res);
-  const session = cookies.get('session_id');
-  console.log(session)
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: `/dashboard/login?redirect=${req.url}`,
-        permanent: false
-      }
-    }
-  }
-  const user = await db.query('SELECT Osoba.* FROM Osoba JOIN Sesja ON Osoba.id = Sesja.osoba WHERE Sesja.id = $1', [session]);
-  if(!user.rowCount) {
-    return {
-      redirect: {
-        destination: `/dashboard/login?redirect=${req.url}`,
-        permanent: false
-      }
-    }
-  }
-
-  console.log(user.rows[0])
-
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await sessionServerSideProps(context);
   return {
-    props: {
-      loggedInUser: user.rows[0]
-    }
+    ...session
   }
 }
 
@@ -74,6 +50,11 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
       >
         <Link href={'dashboard/userManagement'}>Dashboard</Link><br />
         <Link href={'dashboard/login'}>Login</Link><br />
+        <button onClick={()=>{
+          fetch('/api/logout', {
+            method: 'POST',
+          })
+        }}>Logout</button>
 
         {JSON.stringify(loggedInUser)}
         
