@@ -22,7 +22,7 @@ export async function getServerSideProps({ req, res }: GetServerSidePropsContext
   if (!session) {
     return {
       redirect: {
-        destination: '/dashboard/login',
+        destination: `/dashboard/login?redirect=${req.url}`,
         permanent: false
       }
     }
@@ -31,7 +31,7 @@ export async function getServerSideProps({ req, res }: GetServerSidePropsContext
   if(!user.rowCount) {
     return {
       redirect: {
-        destination: '/dashboard/login',
+        destination: `/dashboard/login?redirect=${req.url}`,
         permanent: false
       }
     }

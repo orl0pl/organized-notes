@@ -25,6 +25,7 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
                         `INSERT INTO Sesja (id, osoba, wygasa) VALUES ($1, $2, $3);`,
                         [sessionId, user.rows[0].id, expiryDate]
                     );
+                    
                     res.status(200).json({ message: 'Login successful' });
                 } else {
                     res.status(401).json({ message: 'Invalid credentials' });

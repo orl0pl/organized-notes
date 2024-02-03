@@ -1,9 +1,11 @@
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 const LoginPage: React.FC = () => {
   const [login, setLogin] = useState('');
   const [haslo, setHaslo] = useState('');
   const [error, setError] = useState('');
+  const {query} = useRouter()
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,6 +25,11 @@ const LoginPage: React.FC = () => {
       if (response.ok) {
         // Handle successful login here, e.g., redirect to dashboard or store token
         console.log(data.message); // Placeholder for successful login handling
+
+        // Redirect
+        if(query.redirect){
+          window.location.href = query.redirect as string
+        }
       } else {
         setError(data.message || 'An error occurred during login.');
       }
