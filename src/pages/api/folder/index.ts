@@ -35,7 +35,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
     } else if (method === 'GET') {
         // Retrieve all folders
         try {
-            const result = await db.query(`SELECT * FROM Folder WHERE rodzic = NULL`);
+            const result = await db.query(`SELECT * FROM Folder WHERE rodzic IS NULL`);
             res.status(200).json(result.rows);
         } catch (error) {
             console.error(error);

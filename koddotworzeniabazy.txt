@@ -16,8 +16,9 @@ CREATE TABLE Folder (
     rodzic INT,
     nazwa VARCHAR(255),
     osoba INT,
-    UNIQUE(id, rodzic),
-    FOREIGN KEY (rodzic) REFERENCES Folder(id) ON DELETE SET NULL,
+    UNIQUE(id, nazwa),
+    CHECK(id <> rodzic),
+    FOREIGN KEY (rodzic) REFERENCES Folder(id) ON DELETE RESTRICT,
     FOREIGN KEY (osoba) REFERENCES Osoba(id)
 );
 

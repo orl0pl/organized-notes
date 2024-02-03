@@ -3,7 +3,7 @@ import db from '../../../../utils/db'; // Replace with your actual path to the d
 
 export default async function folderHandler(req: NextApiRequest, res: NextApiResponse) {
     const { method, body, query } = req;
-    
+    console.log(query.name)
 
     await db.query(`
                 CREATE TABLE IF NOT EXISTS Folder (
@@ -36,10 +36,24 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
     } else if (method === 'GET') {
         // Retrieve all folders
         try {
-            const result = await db.query(`SELECT id, nazwa
-            FROM Folder
-            WHERE rodzic = (SELECT id FROM Folder WHERE nazwa = $1);
-            `, [query.name?.at(-1)||query.name]);
+            var result;
+            if (typeof query.name === "string" || query.name !== undefined && (query.name.length >= 1)) {
+                result = await db.query(`SELECT id, nazwa
+                FROM Folder
+                WHERE rodzic = (SELECT id FROM Folder WHERE nazwa = $1);
+                `, [query.name[0] || query.name]);
+            }
+            else {
+                result = await db.query(`
+            WITH RECURSIVE FolderCTE AS (
+              SELECT * FROM Folder WHERE nazwa IN ($1)
+              UNION
+              SELECT f.* FROM Folder f
+              INNER JOIN FolderCTE cte ON f.rodzic = cte.id
+            )
+            SELECT * FROM FolderCTE;
+          `, [query.name?.join(',')]);
+            }
             res.status(200).json(result.rows);
         } catch (error) {
             console.error(error);

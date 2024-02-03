@@ -26,13 +26,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 export default function Home({ loggedInUser }: { loggedInUser: User }) {
   // const { updateSourceColor, scheme, toggleMode, sourceColor, mode } =
   //   useTheme();
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState<Folder[]>([]);
   const [folderName, setFolderName] = useState("");
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/folder").then((res) => res.json()).then((data) => setFolders(data));
-  }, []);
+    fetch("/api/folder/"+(typeof router.query.name === "string" ? router.query.name : router.query.name?.join("/") )).then((res) => res.json()).then((data) => setFolders(data));
+  }, [router.query.name]);
   return (
     <div className={"app " + roboto.className}>
       <main
@@ -40,25 +40,25 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           padding: 16
         }}
       >
-        <h1>Root Folder</h1>
+        <h1>Folder: {typeof router.query.name === "string" ? router.query.name : router.query.name?.join("/") }</h1>
         <label>
           Folder Name:
           <input type="text" name="folderName" value={folderName} onChange={(e) => setFolderName(e.target.value)} />
         </label>
         <button onClick={() => {
-          fetch('/api/folder', {
+          fetch('/api/folder/'+(typeof router.query.name === "string" ? router.query.name : router.query.name?.join("/")), {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nazwa: folderName, rodzic: null, osoba: loggedInUser.id }),
+            body: JSON.stringify({ nazwa: folderName, rodzic: folders[0]?.rodzic, osoba: loggedInUser.id }),
           });
-          fetch("/api/folder").then((res) => res.json()).then((data) => setFolders(data));
+          fetch('/api/folder/'+(typeof router.query.name === "string" ? router.query.name : router.query.name?.join("/"))).then((res) => res.json()).then((data) => setFolders(data));
         }}>Create Folder</button>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           {folders.length > 0 ? folders.map((folder: Folder) => (
             <div key={folder.id}>
-              <Link href={`/folder/${folder.nazwa}`} key={folder.id}>
+              <Link href={`/folder/${typeof router.query.name === "string" ? router.query.name : router.query.name?.join("/")}/${folder.nazwa}`} key={folder.id}>
                 {folder.nazwa}
               </Link>
               - Created by {folder.osoba}
