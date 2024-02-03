@@ -19,13 +19,10 @@ export default async function login(req: NextApiRequest, res: NextApiResponse) {
                     res.setHeader('Set-Cookie', `session_id=${sessionId}; HttpOnly; Path=/;`);
                     const expiryDate = new Date();
                     expiryDate.setDate(expiryDate.getDate() + 7); // Set the expiry date to one week from now
+                    // CREATE TABLE sesja
+                    //await db.query('CREATE TABLE IF NOT EXISTS sesja (id VARCHAR(256) PRIMARY KEY,osoba INT,wygasa TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL \'1 WEEK\',FOREIGN KEY (osoba) REFERENCES Osoba(id));');
                     const insertSessionResult = await db.query(
-                        `CREATE TABLE Sesja (
-                            id VARCHAR(256) PRIMARY KEY,
-                            osoba INT,
-                            wygasa DATETIME DEFAULT CURRENT_TIMESTAMP + INTERVAL 1 WEEK,
-                            FOREIGN KEY (osoba) REFERENCES Osoba(id)
-                        );INSERT INTO Sesja (id, osoba, wygasa) VALUES ($1, $2, $3);`,
+                        `INSERT INTO Sesja (id, osoba, wygasa) VALUES ($1, $2, $3);`,
                         [sessionId, user.rows[0].id, expiryDate]
                     );
                     res.status(200).json({ message: 'Login successful' });
