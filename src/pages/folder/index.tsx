@@ -56,7 +56,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           {folders.length > 0 ? folders.map((folder: Folder) => (
             <div key={folder.id}>
-              <Link href={`/folder/${folder.nazwa}`} key={folder.id}>
+              <Link href={`/folder/${folder.id}`} key={folder.id}>
                 {folder.nazwa}
               </Link>
               - Created by {folder.osoba}
