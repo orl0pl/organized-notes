@@ -8,8 +8,6 @@ import { mdiAbTesting, mdiCog, mdiGlobeModel, mdiHome, mdiWeatherNight, mdiWeath
 import { hexFromArgb } from "@material/material-color-utilities";
 import Link from "next/link";
 import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from "next";
-import Cookies from "cookies";
-import { db } from "@vercel/postgres";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 

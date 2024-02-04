@@ -1,7 +1,7 @@
 import User from "@/interfaces/user";
-import { db } from "@vercel/postgres";
 import Cookies from "cookies";
 import { GetServerSidePropsContext } from "next";
+import db from "./db";
 
 export async function sessionServerSideProps({ req, res }: GetServerSidePropsContext) {
 const cookies = new Cookies(req, res);
