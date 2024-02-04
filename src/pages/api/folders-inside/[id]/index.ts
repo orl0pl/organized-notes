@@ -36,7 +36,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         // Retrieve all folders that are inside
         try {
             
-            const result = await db.query(`SELECT * FROM Folder WHERE rodzic = $1`, [query.id]);
+            const result = await db.query(`SELECT folder.*, osoba.nazwa FROM folder WHERE rodzic = $1 JOIN osoba ON folder.osoba = osoba.id`, [query.id]);
             res.status(200).json(result.rows);
         } catch (error) {
             console.error(error);

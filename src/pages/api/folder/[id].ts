@@ -6,7 +6,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
     if (method === 'GET') {
         try {
-            const result = await db.query(`SELECT * FROM folder WHERE id = $1`, [query.id]);
+            const result = await db.query(`SELECT folder.*, osoba.nazwa FROM folder WHERE id = $1 JOIN osoba ON folder.osoba = osoba.id`, [query.id]);
             if (result.rows.length === 0) {
                 res.status(404).json({ message: 'Folder not found' });
             } else {
