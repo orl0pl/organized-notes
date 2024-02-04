@@ -31,7 +31,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("/api/folder/"+router.query.id).then((res) => res.json()).then((data) => {setFolders(data); });
+    fetch('/api/folders-inside/'+router.query.id).then((res) => res.json()).then((data) => {setFolders(data); });
   }, [router.query.id]);
   return (
     <div className={"app " + roboto.className}>
@@ -40,21 +40,34 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           padding: 16
         }}
       >
-        <h1>Folder: {router.query.id}</h1>
+        <h1>Folder: {router.query.id} <button>delete folder</button></h1>
+        
         <label>
           Folder Name:
           <input type="text" name="folderName" value={folderName} onChange={(e) => setFolderName(e.target.value)} />
         </label>
         <button onClick={() => {
-          fetch('/api/folder/'+router.query.id, {
+          fetch('/api/folders-inside/'+router.query.id, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ nazwa: folderName, rodzic: router.query.id, osoba: loggedInUser.id }),
           });
+          fetch('/api/folders-inside/'+(router.query.id)).then((res) => res.json()).then((data) => {setFolders(data);});
+        }}>Create New Folder Inside</button>
+        <button onClick={() => {
+          fetch('/api/folders-inside/'+router.query.id, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nazwa: folderName, id: router.query.id, osoba: loggedInUser.id }),
+          });
           fetch("/api/folder/"+(router.query.id)).then((res) => res.json()).then((data) => {setFolders(data);});
-        }}>Create Folder</button>
+        }}>
+          Change Folder Name
+        </button>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           {folders?.length ? folders.map((folder: Folder) => (
             <div key={folder.id}>

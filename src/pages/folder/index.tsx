@@ -29,7 +29,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
   const [folderName, setFolderName] = useState("");
 
   useEffect(() => {
-    fetch("/api/folder").then((res) => res.json()).then((data) => setFolders(data));
+    fetch('/api/folders-inside').then((res) => res.json()).then((data) => setFolders(data));
   }, []);
   return (
     <div className={"app " + roboto.className}>
@@ -44,14 +44,14 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           <input type="text" name="folderName" value={folderName} onChange={(e) => setFolderName(e.target.value)} />
         </label>
         <button onClick={() => {
-          fetch('/api/folder', {
+          fetch('/api/folders-inside', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ nazwa: folderName, rodzic: null, osoba: loggedInUser.id }),
           });
-          fetch("/api/folder").then((res) => res.json()).then((data) => setFolders(data));
+          fetch('/api/folders-inside').then((res) => res.json()).then((data) => setFolders(data));
         }}>Create Folder</button>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16 }}>
           {folders.length > 0 ? folders.map((folder: Folder) => (
