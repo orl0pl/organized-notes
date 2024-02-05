@@ -1,14 +1,15 @@
-CREATE TABLE Notatki (
-    id INT PRIMARY KEY,
+CREATE TABLE Notatka (
+    id SERIAL PRIMARY KEY,
+    tekst TEXT,
     folder INT,
     nazwa VARCHAR(255),
     ostatnia_wersja INT,
     osoba INT,
-    czas DATETIME,
-    UNIQUE(id, folder),
+    czas TIMESTAMP,
+    UNIQUE(nazwa, folder),
     FOREIGN KEY (folder) REFERENCES Folder(id),
     FOREIGN KEY (osoba) REFERENCES Osoba(id),
-    FOREIGN KEY (ostatnia_wersja) REFERENCES Notatki(id) ON DELETE SET NULL
+    FOREIGN KEY (ostatnia_wersja) REFERENCES Notatka(id) ON DELETE SET NULL
 );
 
 CREATE TABLE Folder (
