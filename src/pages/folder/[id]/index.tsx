@@ -34,6 +34,9 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 	//   useTheme();
 	const [folders, setFolders] = useState<Folder[]>([]);
 	const [currentFolder, setCurrentFolder] = useState<Folder | undefined>(undefined);
+	const [currentFolderTags, setCurrentFolderTags] = useState<{klucz: string, wartosc: string}[]>([]);
+	const [tagValue, setTagValue] = useState("");
+	const [tagKey, setTagKey] = useState("");
 	const [folderName, setFolderName] = useState("");
 	const router = useRouter();
 
@@ -56,6 +59,13 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 			return res.json();
 		})
 			.then((data) => setCurrentFolder(data));
+		fetch("/api/folder-tags/"+router.query.id)
+		.then((res) => {
+			if (res.status === 404) {
+				alert("Folder not found");
+			}
+			return res.json();
+		}).then((data) => setCurrentFolderTags(data))
 	}, [router.query.id]);
 	return (
 		<div className={"app " + roboto.className}>
@@ -127,6 +137,78 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 					>
 						Change Folder Name
 					</button>
+					Tags:
+					<table>
+						<thead>
+							<tr>
+								<th>Key</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+						<tbody>
+							{currentFolderTags.map((tag) => (
+								<tr key={tag.klucz}>
+									<td>{tag.klucz}</td>
+									<td>{tag.wartosc}</td>
+									<td><button onClick={()=>{
+										fetch("/api/folder-tags/" + router.query.id, {
+											method: "PUT",
+											headers: {
+												"Content-Type": "application/json",
+											},
+											body: JSON.stringify({
+												klucz: tag.klucz,
+												wartosc: tagValue,
+												
+											}),
+										})
+									}}>Edit</button><button onClick={()=>{
+										fetch("/api/folder-tags/" + router.query.id, {
+											method: "DELETE",
+											headers: {
+												"Content-Type": "application/json",
+											},
+											body: JSON.stringify({
+												klucz: tag.klucz,
+												
+											}),
+										})
+									}}>Delete</button></td>
+								</tr>
+							))}
+							<tr>
+								<td>
+									<input
+										type="text"
+										name="key"
+										value={tagKey}
+										onChange={(e) => setTagKey(e.target.value)}
+									/>
+								</td>
+								<td>
+									<input
+										type="text"
+										name="value"
+										value={tagValue}
+										onChange={(e) => setTagValue(e.target.value)}
+									/>
+								</td>
+								<td><button onClick={() => {
+									fetch("/api/folder-tags/" + router.query.id, {
+										method: "POST",
+										headers: {
+											"Content-Type": "application/json",
+										},
+										body: JSON.stringify({
+											klucz: tagKey,
+											wartosc: tagValue
+											
+										}),
+									})
+								}}>Add</button></td>
+							</tr>
+						</tbody>
+					</table>
 					<div
 						style={{
 							display: "grid",
