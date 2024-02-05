@@ -36,44 +36,8 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         // Retrieve all folders that are inside
         try {
             
-            const result = await db.query(`SELECT folder.*, osoba.nazwa FROM folder WHERE rodzic = $1 JOIN osoba ON folder.osoba = osoba.id`, [query.id]);
+            const result = await db.query(`SELECT folder.*, osoba.nazwa FROM folder JOIN osoba ON folder.osoba = osoba.id WHERE folder.rodzic = $1`, [query.id]);
             res.status(200).json(result.rows);
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal server error', error });
-        }
-    } else if (method === 'PUT') {
-        // Update a folder
-        const { rodzic, nazwa, osoba } = body;
-        try {
-            const result = await db.query(
-                `UPDATE Folder SET rodzic = $1, nazwa = $2, osoba = $3 WHERE id = $4 RETURNING *;`,
-                [rodzic, nazwa, osoba, query.id]
-            );
-
-            if (result.rowCount === 0) {
-                res.status(404).json({ message: 'Folder not found' });
-            } else {
-                res.status(200).json(result.rows[0]);
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal server error', error });
-        }
-    } else if (method === 'DELETE') {
-        // Delete a folder
-        const { folderId } = body;
-        try {
-            const result = await db.query(
-                `DELETE FROM Folder WHERE id = $1 RETURNING *;`,
-                [folderId]
-            );
-
-            if (result.rowCount === 0) {
-                res.status(404).json({ message: 'Folder not found' });
-            } else {
-                res.status(200).json({ message: 'Folder deleted successfully', deletedFolder: result.rows[0] });
-            }
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Internal server error', error });

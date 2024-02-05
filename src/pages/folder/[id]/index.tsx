@@ -39,12 +39,22 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 
 	useEffect(() => {
 		fetch("/api/folders-inside/" + router.query.id)
-			.then((res) => res.json())
+			.then((res) => {
+				if (res.status === 404) {
+					alert("Folder not found");
+				}
+				return res.json();
+			})
 			.then((data) => {
 				setFolders(data);
-			});
+			})
 		fetch("/api/folder/" + router.query.id)
-			.then((res) => res.json())
+		.then((res) => {
+			if (res.status === 404) {
+				alert("Folder not found");
+			}
+			return res.json();
+		})
 			.then((data) => setCurrentFolder(data));
 	}, [router.query.id]);
 	return (
@@ -56,7 +66,11 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 					}}
 				>
 					<h1>
-						Folder: {currentFolder.nazwa} <button>delete folder</button>
+						Folder: {currentFolder.nazwa} <button onClick={() => {
+							fetch("/api/folder/" + router.query.id, {
+								method: "DELETE",
+							});
+						}}>delete folder</button>
 					</h1>
 
 					<label>
@@ -101,6 +115,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 									nazwa: folderName,
 									id: router.query.id,
 									osoba: loggedInUser.id,
+									rodzic: currentFolder.rodzic,
 								}),
 							});
 							fetch("/api/folder/" + router.query.id)
