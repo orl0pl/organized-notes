@@ -5,7 +5,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 	const { method, query } = req;
 
 	await db.query(`
-	CREATE TABLE Notatka (
+	CREATE TABLE IF NOT EXISTS Notatka (
 		id SERIAL PRIMARY KEY,
 		tekst TEXT,
 		folder INT,
@@ -57,7 +57,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 			res.status(500).json({ message: "Internal server error", error });
 		}
 	} else {
-		res.setHeader("Allow", ["GET"]);
+		res.setHeader("Allow", ["GET", "DELETE", "PUT"]);
 		res.status(405).end(`Method ${method} Not Allowed`);
 	}
 }
