@@ -46,11 +46,10 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         }
     } else if (method === 'DELETE') {
         // Delete a notatka
-        const { folderId } = body;
         try {
             const result = await db.query(
                 `DELETE FROM Notatka WHERE folder = $1 RETURNING *;`,
-                [folderId]
+                [query.id]
             );
 
             if (result.rowCount === 0) {

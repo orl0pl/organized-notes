@@ -7,9 +7,9 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 	await db.query(`
 	CREATE TABLE IF NOT EXISTS Notatka (
 		id SERIAL PRIMARY KEY,
-		tekst TEXT,
+		tekst TEXT NOT NULL,
 		folder INT,
-		nazwa VARCHAR(255),
+		nazwa VARCHAR(255) NOT NULL,
 		ostatnia_wersja INT,
 		osoba INT,
 		czas TIMESTAMP,
@@ -45,12 +45,37 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "PUT") {
 		try {
-			const { nazwa, osoba } = req.body;
-			await db.query(`UPDATE notatka SET nazwa = $1, osoba = $2 WHERE id = $3`, [
-				nazwa,
-				osoba,
-				query.id,
-			]);
+			const { nazwa, osoba, tekst, folder } = req.body;
+			// Define an array to store the update clauses
+			const updateClauses = [];
+			const values = [query.id];
+
+			// Check if each value is defined and add corresponding clause to the array
+			if (tekst) {
+				updateClauses.push('tekst = $' + (values.length + 1));
+				values.push(tekst);
+			}
+			if (folder) {
+				updateClauses.push('folder = $' + (values.length + 1));
+				values.push(folder);
+			}
+			if (nazwa) {
+				updateClauses.push('nazwa = $' + (values.length + 1));
+				values.push(nazwa);
+			}
+			if (osoba) {
+				updateClauses.push('osoba = $' + (values.length + 1));
+				values.push(osoba);
+			}
+
+			// Construct the SET clause by joining the update clauses with commas
+			const setClause = updateClauses.join(', ');
+
+			// Construct the SQL query with the SET clause
+			const queryText = `UPDATE notatka SET ${setClause} WHERE id = $1`;
+
+			// Execute the query
+			await db.query(queryText, values);
 			res.status(200).json({ message: "Notatka updated successfully" });
 		} catch (error) {
 			console.error(error);
