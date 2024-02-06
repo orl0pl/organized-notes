@@ -16,6 +16,14 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
                 );
             `);
 
+	const session = req.cookies.session_id || req.body.session_id;
+	const sessionInDb = await db.query(`SELECT * FROM sesja WHERE id = $1`, [session]);
+
+	if (sessionInDb.rows.length === 0) {
+		res.status(401).json({ message: "Invalid session" });
+		return;
+	}
+
 	if (method === "GET") {
 		try {
 			const result = await db.query(
