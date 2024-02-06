@@ -41,8 +41,14 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 
 
 	useEffect(() => {
-		
-	}, [router.query.id]);
+		fetch("/api/note/" + router.query.id)
+			.then((res) => res.json())
+			.then((data) => setCurrentNote(data));
+		setNoteContent(currentNote?.tekst || "");
+		fetch("/api/note-tags/" + router.query.id)
+			.then((res) => res.json())
+			.then((data) => setNoteTags(data));
+	}, [currentNote?.tekst, router.query.id]);
 	return (
 		<div className={"app " + roboto.className}>
 			{currentNote ? (
@@ -52,7 +58,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 					}}
 				>
 					<h1>
-						Folder: {currentNote.nazwa} <button onClick={() => {
+						Note: {currentNote.nazwa} <button onClick={() => {
 							fetch("/api/folder/" + router.query.id, {
 								method: "DELETE",
 							});
@@ -60,7 +66,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 					</h1>
 
 					<label>
-						Folder Name:
+						Note name:
 						<input
 							type="text"
 							name="noteName"
@@ -70,24 +76,6 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 					</label>
 					<button
 						onClick={() => {
-							fetch("/api/folders-inside/" + router.query.id, {
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-								},
-								body: JSON.stringify({
-									nazwa: noteName,
-									rodzic: router.query.id,
-									osoba: loggedInUser.id,
-								}),
-							});
-							
-						}}
-					>
-						Create New Folder Inside
-					</button>
-					<button
-						onClick={() => {
 							fetch("/api/note/" + router.query.id, {
 								method: "PUT",
 								headers: {
@@ -95,7 +83,6 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 								},
 								body: JSON.stringify({
 									nazwa: noteName,
-									id: router.query.id,
 									osoba: loggedInUser.id,
                                     
 								}),
@@ -123,7 +110,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 									<td>{tag.klucz}</td>
 									<td>{tag.wartosc}</td>
 									<td><button onClick={()=>{
-										fetch("/api/folder-tags/" + router.query.id, {
+										fetch("/api/note-tags/" + router.query.id, {
 											method: "PUT",
 											headers: {
 												"Content-Type": "application/json",
@@ -135,7 +122,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 											}),
 										})
 									}}>Edit</button><button onClick={()=>{
-										fetch("/api/folder-tags/" + router.query.id, {
+										fetch("/api/note-tags/" + router.query.id, {
 											method: "DELETE",
 											headers: {
 												"Content-Type": "application/json",
@@ -166,7 +153,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 									/>
 								</td>
 								<td><button onClick={() => {
-									fetch("/api/folder-tags/" + router.query.id, {
+									fetch("/api/note-tags/" + router.query.id, {
 										method: "POST",
 										headers: {
 											"Content-Type": "application/json",
@@ -181,16 +168,23 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
 							</tr>
 						</tbody>
 					</table>
-					<div
-						style={{
-							display: "grid",
-							gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-							gap: 16,
-						}}
-					>
-						
-					</div>
-					
+					<textarea value={noteContent} onChange={(e) => setNoteContent(e.target.value)}>
+						{currentNote.tekst}
+					</textarea>
+					<button onClick={()=>{
+						fetch("/api/note/" + router.query.id, {
+							method: "PUT",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify({
+								nazwa: noteName,
+								id: router.query.id,
+								osoba: loggedInUser.id,
+								tekst: noteContent
+							}),
+						})
+					}}>Save</button>
 					{router.query.id?.toString() || "udef"}
 				</main>
 			) : (
