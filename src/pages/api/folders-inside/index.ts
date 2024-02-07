@@ -7,21 +7,25 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
     const user = await verifySessionInApi(req, res);
 
-	if (!user) {return;}
+    if (!user) { return; }
 
     await db.query(`
-                CREATE TABLE IF NOT EXISTS Folder (
-                    id SERIAL PRIMARY KEY,
-                    rodzic INT,
-                    nazwa VARCHAR(255) NOT NULL,
-                    osoba INT,
-                    UNIQUE (id, rodzic),
-                    FOREIGN KEY (rodzic) REFERENCES Folder (id) ON DELETE CASCADE,
-                    FOREIGN KEY (osoba) REFERENCES Osoba (id)
-                );
-            `);
+        CREATE TABLE IF NOT EXISTS Folder (
+            id SERIAL PRIMARY KEY,
+            rodzic INT,
+            nazwa VARCHAR(255) NOT NULL,
+            osoba INT,
+            UNIQUE (id, rodzic),
+            FOREIGN KEY (rodzic) REFERENCES Folder (id) ON DELETE CASCADE,
+            FOREIGN KEY (osoba) REFERENCES Osoba (id)
+        );
+    `);
 
     if (method === 'POST') {
+        if(!user.administrator || !user.tworzenieFolderu){
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
         // Create a folder
         const { rodzic, nazwa } = body;
         try {
@@ -47,11 +51,15 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         }
     } else if (method === 'PUT') {
         // Update a folder
-        const { id, rodzic, nazwa } = body;
+        const { rodzic, nazwa } = body;
         try {
+            if(!user.administrator || !user.edytowanieFolderow ){
+                res.status(401).json({ message: "Unauthorized" });
+				return;
+            }
             const result = await db.query(
-                `UPDATE Folder SET rodzic = $1, nazwa = $2, osoba = $3 WHERE id = $4 RETURNING *;`,
-                [rodzic, nazwa, user.id, id]
+                `UPDATE Folder SET rodzic = $1, nazwa = $2, osoba = $3 WHERE rodzic = NULL RETURNING *;`,
+                [rodzic, nazwa, user.id]
             );
 
             if (result.rowCount === 0) {
@@ -68,7 +76,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         const { folderId } = body;
         try {
             const result = await db.query(
-                `DELETE FROM Folder WHERE id = $1 RETURNING *;`,
+                `DELETE FROM Folder WHERE rodzic = $1 OR id = $1 RETURNING *;`,
                 [folderId]
             );
 
