@@ -23,15 +23,11 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
     const folderOwner = await db.query('SELECT osoba.id FROM osoba JOIN folder ON osoba.id = folder.osoba WHERE folder.id = $1', [query.id]);
 
-    const isAllowedToEditTags = (await db.query(
-        `SELECT * FROM dostep WHERE folder = $1 AND osoba = $2 AND edycja = TRUE`, [query.id, user.id]
-    )).rows.length > 0;
-
     if (method === 'POST') {
         // Create a folder
         const { klucz, wartosc } = body;
         try {
-            if (!isAllowedToEditTags && folderOwner.rows[0].osoba !== user.id && (!user.administrator || !user.edytowanieFolderow)) {
+            if (folderOwner.rows[0].osoba !== user.id && !user.administrator || !user.edytowanieFolderow) {
                 res.status(401).json({ message: "Unauthorized" });
                 return;
             }
@@ -55,14 +51,6 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
             //     PRIMARY KEY (idFolderu, klucz),
             //     FOREIGN KEY (idFolderu) REFERENCES Folder(id)
             // );
-            const isAllowed = (await db.query(
-                `SELECT * FROM dostep WHERE folder = $1 AND osoba = $2`, [query.id, user.id]
-            )).rows.length > 0;
-
-            if (!isAllowed && folderOwner.rows[0].osoba !== user.id && !user.administrator) {
-                res.status(401).json({ message: "Unauthorized" });
-                return;
-            }
 
 
             const result = await db.query(`SELECT klucz, wartosc FROM TagFolderu WHERE idFolderu = $1`, [query.id]);
@@ -73,7 +61,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         }
     } else if (method === 'DELETE') {
         try {
-            if (!isAllowedToEditTags && folderOwner.rows[0].osoba !== user.id && (!user.administrator || !user.edytowanieFolderow)) {
+            if (folderOwner.rows[0].osoba !== user.id || !user.administrator || !user.edytowanieFolderow) {
                 res.status(401).json({ message: "Unauthorized" });
                 return;
             }
@@ -86,7 +74,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
     } else if (method === 'PUT') {
         try {
-            if (!isAllowedToEditTags && folderOwner.rows[0].osoba !== user.id && (!user.administrator || !user.edytowanieFolderow)) {
+            if (folderOwner.rows[0].osoba !== user.id || !user.administrator || !user.edytowanieFolderow) {
                 res.status(401).json({ message: "Unauthorized" });
                 return;
             }

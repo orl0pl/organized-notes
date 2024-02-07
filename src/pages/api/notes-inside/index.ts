@@ -28,7 +28,10 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
     if (method === 'POST') {
         const { nazwa, tekst, ostatnia_wersja } = body;
         try {
-
+            if(!user.administrator || !user.dodawanieNotatek){
+                res.status(401).json({ message: "Unauthorized" });
+                return;
+            }
             const result = await db.query(
                 `INSERT INTO Notatka (nazwa, osoba, tekst, ostatnia_wersja) VALUES ($1, $2, $3, $4) RETURNING *;`,
                 [nazwa, user.id, tekst, ostatnia_wersja]
@@ -52,6 +55,10 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         // Delete a notatka
         const { folderId } = body;
         try {
+            if(!user.administrator || !user.edytowanieCudzychNotatek){
+                res.status(401).json({ message: "Unauthorized" });
+                return;
+            }
             const result = await db.query(
                 `DELETE FROM Notatka WHERE folder = $1 RETURNING *;`,
                 [folderId]

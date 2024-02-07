@@ -25,24 +25,6 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
 	if (method === "GET") {
 		try {
-			// CREATE TABLE Dostep (
-			// 	folder INT,
-			// 	osoba INT,
-			// 	edycja BOOL,
-			// 	usuwanie BOOL,
-			// 	PRIMARY KEY (folder, osoba),
-			// 	FOREIGN KEY (folder) REFERENCES Folder(id),
-			// 	FOREIGN KEY (osoba) REFERENCES Osoba(id)
-			// );
-
-			const isAllowed = (await db.query(
-				`SELECT * FROM dostep WHERE folder = $1 AND osoba = $2`, [query.id, user.id]
-			)).rows.length > 0;
-
-			if (!isAllowed && folderOwner.rows[0].osoba !== user.id && !user.administrator) {
-				res.status(401).json({ message: "Unauthorized" });
-				return;
-			}
 			
 			const result = await db.query(
 				`SELECT folder.*, osoba.nazwa as osoba_nazwa FROM folder JOIN osoba ON folder.osoba = osoba.id WHERE folder.id = $1 `,
@@ -61,11 +43,8 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 	} else if (method === "DELETE") {
 		
 		try {
-			const isAllowedToDelete = (await db.query(
-				`SELECT * FROM dostep WHERE folder = $1 AND osoba = $2 AND usuwanie = TRUE`, [query.id, user.id]
-			)).rows.length > 0;
 
-			if (!isAllowedToDelete && folderOwner.rows[0].osoba !== user.id && (!user.administrator || !user.edytowanieFolderow) ) {
+			if (folderOwner.rows[0].osoba !== user.id || !user.administrator || !user.edytowanieFolderow ) {
 				res.status(401).json({ message: "Unauthorized" });
 				return;
 			}
@@ -77,11 +56,8 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "PUT") {
 		try {
-			const isAllowedToEdit = (await db.query(
-				`SELECT * FROM dostep WHERE folder = $1 AND osoba = $2 AND edycja = TRUE`, [query.id, user.id]
-			)).rows.length > 0;
 
-			if (!isAllowedToEdit && folderOwner.rows[0].osoba !== user.id  && (!user.administrator || !user.edytowanieFolderow) ) {
+			if (folderOwner.rows[0].osoba !== user.id  || !user.administrator || !user.edytowanieFolderow ) {
 				res.status(401).json({ message: "Unauthorized" });
 				return;
 			}

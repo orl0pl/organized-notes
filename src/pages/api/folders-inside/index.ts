@@ -71,24 +71,6 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
             console.error(error);
             res.status(500).json({ message: 'Internal server error', error });
         }
-    } else if (method === 'DELETE') {
-        // Delete a folder
-        const { folderId } = body;
-        try {
-            const result = await db.query(
-                `DELETE FROM Folder WHERE rodzic = $1 OR id = $1 RETURNING *;`,
-                [folderId]
-            );
-
-            if (result.rowCount === 0) {
-                res.status(404).json({ message: 'Folder not found' });
-            } else {
-                res.status(200).json({ message: 'Folder deleted successfully', deletedFolder: result.rows[0] });
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal server error', error });
-        }
     } else {
         res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
         res.status(405).json({ message: `Method ${method} Not Allowed` });

@@ -25,7 +25,10 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         // Create a folder
         const { rodzic, nazwa } = body;
         try {
-
+            if(!user.administrator || !user.tworzenieFolderu){
+                res.status(401).json({ message: "Unauthorized" });
+                return;
+            }
             const result = await db.query(
                 `INSERT INTO Folder (rodzic, nazwa, osoba) VALUES ($1, $2, $3) RETURNING *;`,
                 [rodzic, nazwa, user.id]
@@ -46,8 +49,29 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
             console.error(error);
             res.status(500).json({ message: 'Internal server error', error });
         }
+    } else if (method === 'DELETE') {
+        // Delete a folder
+        if(!user.administrator || !user.edytowanieFolderow){
+            res.status(401).json({ message: "Unauthorized" });
+            return;
+        }
+        try {
+            const result = await db.query(
+                `DELETE FROM Folder WHERE rodzic = $1 OR id = $1 RETURNING *;`,
+                [query.id]
+            );
+
+            if (result.rowCount === 0) {
+                res.status(404).json({ message: 'Folder not found' });
+            } else {
+                res.status(200).json({ message: 'Folder deleted successfully', deletedFolder: result.rows[0] });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error', error });
+        }
     } else {
-        res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
+        res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
         res.status(405).json({ message: `Method ${method} Not Allowed` });
     }
 }

@@ -32,10 +32,17 @@ export default async function noteTagsHandler(req: NextApiRequest, res: NextApiR
     );
     `);
 
+    const notatkaOwner = await db.query('SELECT osoba.id FROM notatka JOIN osoba ON notatka.osoba = osoba.id WHERE notatka.id = $1', [query.id]);
+
     if (method === 'POST') {
         // Create a tag
+        
         const { klucz, wartosc } = body;
         try {
+            if(!user.administrator || !user.edytowanieCudzychNotatek || notatkaOwner.rows[0].id !== user.id){
+				res.status(401).json({ message: "Unauthorized" });
+				return;
+			}
             const result = await db.query(
                 `INSERT INTO TagNotatki (idNotatki, klucz, wartosc) VALUES ($1, $2, $3) RETURNING *;`,
                 [query.id, klucz, wartosc]
@@ -57,6 +64,10 @@ export default async function noteTagsHandler(req: NextApiRequest, res: NextApiR
         }
     } else if (method === 'DELETE') {
         try {
+            if(!user.administrator || !user.edytowanieCudzychNotatek || notatkaOwner.rows[0].id !== user.id){
+				res.status(401).json({ message: "Unauthorized" });
+				return;
+			}
             await db.query(`DELETE FROM TagNotatki WHERE idNotatki = $1 AND klucz = $2`, [query.id, body.klucz]);
             res.status(200).json({ message: "Note tag deleted successfully" });
         } catch (error) {
@@ -65,6 +76,10 @@ export default async function noteTagsHandler(req: NextApiRequest, res: NextApiR
         }
     } else if (method === 'PUT') {
         try {
+            if(!user.administrator || !user.edytowanieCudzychNotatek || notatkaOwner.rows[0].id !== user.id){
+				res.status(401).json({ message: "Unauthorized" });
+				return;
+			}
             const { klucz, wartosc } = req.body;
             await db.query(`UPDATE TagNotatki SET wartosc = $2 WHERE idNotatki = $3 AND klucz = $1`, [
                 klucz,

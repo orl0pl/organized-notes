@@ -42,6 +42,10 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "DELETE") {
 		try {
+			if(!user.administrator || !user.edytowanieCudzychNotatek){
+				res.status(401).json({ message: "Unauthorized" });
+				return;
+			}
 			await db.query(`DELETE FROM notatka WHERE id = $1`, [query.id]);
 			res.status(200).json({ message: "Notatka deleted successfully" });
 		} catch (error) {
@@ -50,6 +54,10 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "PUT") {
 		try {
+			if(!user.administrator || !user.edytowanieCudzychNotatek){
+				res.status(401).json({ message: "Unauthorized" });
+				return;
+			}
 			const { nazwa, tekst, folder } = req.body;
 			// Define an array to store the update clauses
 			const updateClauses = [];
