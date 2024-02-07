@@ -7,7 +7,6 @@ import { NextRequest } from "next/server";
 export async function sessionServerSideProps({ req, res }: GetServerSidePropsContext) {
 const cookies = new Cookies(req, res);
   const session = cookies.get('session_id');
-  console.log(session)
 
   if (!session) {
     return {
@@ -60,8 +59,6 @@ export async function verifySessionInApi(req: NextApiRequest, res: NextApiRespon
   
 
 	const users = await db.query(`SELECT * FROM osoba WHERE id = $1`, [sessionInDb.rows[0].osoba]);
-
-  console.log(users.rows)
 
 	if (users.rows.length === 0) {
 		res.status(401).json({ message: "Invalid user" });

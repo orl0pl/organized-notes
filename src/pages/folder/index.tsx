@@ -1,14 +1,7 @@
-import Head from "next/head";
-import Image from "next/image";
-import styles from "@/styles/Home.module.css";
-// import { Button, LayoutWithNavigationBar, NavigationBar, Text, ThemeProvider, useTheme } from "md3-react";
-import { Ribeye, Roboto } from "next/font/google";
+import { Roboto } from "next/font/google";
 import { useEffect, useState } from "react";
-import { mdiAbTesting, mdiCog, mdiGlobeModel, mdiHome, mdiWeatherNight, mdiWeatherSunny } from "@mdi/js";
-import { hexFromArgb } from "@material/material-color-utilities";
 import Link from "next/link";
-import { GetServerSideProps, GetServerSidePropsContext, NextApiRequest } from "next";
-import Cookies from "cookies";
+import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 
@@ -22,8 +15,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function Home({ loggedInUser }: { loggedInUser: User }) {
-  // const { updateSourceColor, scheme, toggleMode, sourceColor, mode } =
-  //   useTheme();
   const [folders, setFolders] = useState([]);
   const [folderName, setFolderName] = useState("");
 

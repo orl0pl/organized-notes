@@ -24,7 +24,6 @@ const LoginPage: React.FC = () => {
 
       if (response.ok) {
         // Handle successful login here, e.g., redirect to dashboard or store token
-        console.log(data.message); // Placeholder for successful login handling
 
         // Redirect
         if(query.redirect){

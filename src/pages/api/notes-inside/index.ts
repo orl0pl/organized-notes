@@ -27,7 +27,6 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
     if (method === 'POST') {
         const { nazwa, tekst, ostatnia_wersja } = body;
-        console.log(body)
         try {
 
             const result = await db.query(
