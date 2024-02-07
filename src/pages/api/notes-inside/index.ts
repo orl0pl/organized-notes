@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../utils/db'; // Replace with your actual path to the db module
+import { verifySessionInApi } from '@/utils/session';
 
 export default async function folderHandler(req: NextApiRequest, res: NextApiResponse) {
     const { method, body } = req;
+
+    const user = await verifySessionInApi(req, res);
+
+	if (!user) {return;}
 
     await db.query(`
 	CREATE TABLE IF NOT EXISTS Notatka (
@@ -21,13 +26,13 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
             `);
 
     if (method === 'POST') {
-        const { nazwa, osoba, tekst, ostatnia_wersja } = body;
+        const { nazwa, tekst, ostatnia_wersja } = body;
         console.log(body)
         try {
 
             const result = await db.query(
                 `INSERT INTO Notatka (nazwa, osoba, tekst, ostatnia_wersja) VALUES ($1, $2, $3, $4) RETURNING *;`,
-                [nazwa, osoba, tekst, ostatnia_wersja]
+                [nazwa, user.id, tekst, ostatnia_wersja]
             );
 
             res.status(201).json(result.rows[0]);

@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../utils/db'; // Replace with your actual path to the db module
+import { verifySessionInApi } from '@/utils/session';
 
 export default async function folderHandler(req: NextApiRequest, res: NextApiResponse) {
     const { method, body } = req;
+
+    const user = await verifySessionInApi(req, res);
+
+	if (!user) {return;}
 
     await db.query(`
                 CREATE TABLE IF NOT EXISTS Folder (
@@ -18,13 +23,13 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
     if (method === 'POST') {
         // Create a folder
-        const { rodzic, nazwa, osoba } = body;
+        const { rodzic, nazwa } = body;
         console.log(body)
         try {
 
             const result = await db.query(
                 `INSERT INTO Folder (rodzic, nazwa, osoba) VALUES ($1, $2, $3) RETURNING *;`,
-                [rodzic, nazwa, osoba]
+                [rodzic, nazwa, user.id]
             );
 
             res.status(201).json(result.rows[0]);
@@ -43,11 +48,11 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         }
     } else if (method === 'PUT') {
         // Update a folder
-        const { id, rodzic, nazwa, osoba } = body;
+        const { id, rodzic, nazwa } = body;
         try {
             const result = await db.query(
                 `UPDATE Folder SET rodzic = $1, nazwa = $2, osoba = $3 WHERE id = $4 RETURNING *;`,
-                [rodzic, nazwa, osoba, id]
+                [rodzic, nazwa, user.id, id]
             );
 
             if (result.rowCount === 0) {

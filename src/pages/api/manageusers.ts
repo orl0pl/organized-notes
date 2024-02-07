@@ -1,9 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import crypto from 'crypto'
 import db from '../../utils/db';
+import { verifySessionInApi } from '@/utils/session';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method, body } = req;
+
+  const user = await verifySessionInApi(req, res);
+
+	if (!user) {return;}
+
+  if(!user.administrator) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
 
   try {
     await db.connect();
