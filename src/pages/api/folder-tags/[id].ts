@@ -1,8 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../utils/db'; // Replace with your actual path to the db module
+import { verifySessionInApi } from '@/utils/session';
 
 export default async function folderHandler(req: NextApiRequest, res: NextApiResponse) {
     const { method, body, query } = req;
+
+    const user = await verifySessionInApi(req, res);
+
+	if (!user) {return;}
 
     await db.query(`
                 CREATE TABLE IF NOT EXISTS Folder (

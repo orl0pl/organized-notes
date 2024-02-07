@@ -1,4 +1,5 @@
 import db from "@/utils/db";
+import { verifySessionInApi } from "@/utils/session";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function folderHandler(req: NextApiRequest, res: NextApiResponse) {
@@ -16,13 +17,9 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
                 );
             `);
 
-	const session = req.cookies.session_id || req.body.session_id;
-	const sessionInDb = await db.query(`SELECT * FROM sesja WHERE id = $1`, [session]);
+	const user = await verifySessionInApi(req, res);
 
-	if (sessionInDb.rows.length === 0) {
-		res.status(401).json({ message: "Invalid session" });
-		return;
-	}
+	if (!user) {return;}
 
 	if (method === "GET") {
 		try {
@@ -49,10 +46,10 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "PUT") {
 		try {
-			const { nazwa, osoba } = req.body;
+			const { nazwa } = req.body;
 			await db.query(`UPDATE folder SET nazwa = $1, osoba = $2 WHERE id = $3`, [
 				nazwa,
-				osoba,
+				user.id,
 				query.id,
 			]);
 			res.status(200).json({ message: "Folder updated successfully" });
@@ -61,7 +58,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 			res.status(500).json({ message: "Internal server error", error });
 		}
 	} else {
-		res.setHeader("Allow", ["GET"]);
+		res.setHeader("Allow", ["GET", "DELETE", "PUT"]);
 		res.status(405).end(`Method ${method} Not Allowed`);
 	}
 }

@@ -1,8 +1,13 @@
 import db from "@/utils/db";
+import { verifySessionInApi } from "@/utils/session";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function folderHandler(req: NextApiRequest, res: NextApiResponse) {
 	const { method, query } = req;
+
+	const user = await verifySessionInApi(req, res);
+
+	if (!user) {return;}
 
 	await db.query(`
 	CREATE TABLE IF NOT EXISTS Notatka (
@@ -45,7 +50,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "PUT") {
 		try {
-			const { nazwa, osoba, tekst, folder } = req.body;
+			const { nazwa, tekst, folder } = req.body;
 			// Define an array to store the update clauses
 			const updateClauses = [];
 			const values = [query.id];
@@ -63,9 +68,9 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 				updateClauses.push('nazwa = $' + (values.length + 1));
 				values.push(nazwa);
 			}
-			if (osoba) {
+			if (user.id) {
 				updateClauses.push('osoba = $' + (values.length + 1));
-				values.push(osoba);
+				values.push(user.id.toString());
 			}
 
 			// Construct the SET clause by joining the update clauses with commas
