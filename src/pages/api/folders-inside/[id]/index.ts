@@ -25,7 +25,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         // Create a folder
         const { rodzic, nazwa } = body;
         try {
-            if(!user.administrator || !user.tworzenieFolderu){
+            if(!user.administrator && !user.tworzenieFolderu){
                 res.status(401).json({ message: "Unauthorized" });
                 return;
             }
@@ -51,7 +51,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         }
     } else if (method === 'DELETE') {
         // Delete a folder
-        if(!user.administrator || !user.edytowanieFolderow){
+        if(!user.administrator && !user.edytowanieFolderow){
             res.status(401).json({ message: "Unauthorized" });
             return;
         }

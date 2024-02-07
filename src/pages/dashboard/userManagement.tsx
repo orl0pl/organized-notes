@@ -22,7 +22,7 @@ const UserManagement: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('/api/hello');
+      const response = await fetch('/api/manageusers');
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -44,7 +44,7 @@ const UserManagement: React.FC = () => {
 
   const handleAddUser = async () => {
     try {
-      const response = await fetch('/api/hello', {
+      const response = await fetch('/api/manageusers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const UserManagement: React.FC = () => {
 
   const handleDeleteUser = async (userId: number) => {
     try {
-      const response = await fetch('/api/hello', {
+      const response = await fetch('/api/manageusers', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
