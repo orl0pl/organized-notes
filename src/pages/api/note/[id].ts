@@ -25,6 +25,8 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 	);
             `);
 
+	const noteOwner = (await db.query(`SELECT osoba.id as osoba_id FROM notatka JOIN osoba ON notatka.osoba = osoba.id WHERE notatka.id = $1`, [query.id])).rows[0]; 
+
 	if (method === "GET") {
 		try {
 			const result = await db.query(
@@ -42,7 +44,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "DELETE") {
 		try {
-			if(!user.administrator || !user.edytowanieCudzychNotatek){
+			if(!user.administrator || !user.edytowanieCudzychNotatek || noteOwner.osoba_id !== user.id){
 				res.status(401).json({ message: "Unauthorized" });
 				return;
 			}
@@ -54,7 +56,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		}
 	} else if (method === "PUT") {
 		try {
-			if(!user.administrator || !user.edytowanieCudzychNotatek){
+			if(!user.administrator || !user.edytowanieCudzychNotatek || noteOwner.osoba_id !== user.id){
 				res.status(401).json({ message: "Unauthorized" });
 				return;
 			}

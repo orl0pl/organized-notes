@@ -1,24 +1,20 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { NextRequest } from 'next/server';
-import db from '../../../utils/db'; // Replace with your actual path to the db module
+import db from '../../../../utils/db'; // Replace with your actual path to the db module
 import { verifySessionInApi } from '@/utils/session';
-import { put } from '@vercel/blob';
-import * as crypto from 'crypto';
-import { errors as formidableErrors } from 'formidable';
 import formidable from 'formidable';
-import PersistentFile from 'formidable/PersistentFile';
-import fs from 'fs'
+import { del, put } from '@vercel/blob';
+import * as crypto from 'crypto';
+import fs from 'fs';
 
-export const config = {
-    api: {
-        bodyParser: false,
-    }
-};
+export default async function imagesHandler(req: NextApiRequest, res: NextApiResponse) {
+    const { method, body } = req;
 
+    const user = await verifySessionInApi(req, res);
 
-export default async function multimediaHandler(req: NextApiRequest, res: NextApiResponse) {
+	if (!user) {return;}
+
     await db.query(`
-    CREATE TABLE IF NOT EXISTS Multimedia (
+    CREATE TABLE Multimedia (
         id SERIAL PRIMARY KEY,
         osoba INT,
         utworzone TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -27,12 +23,7 @@ export default async function multimediaHandler(req: NextApiRequest, res: NextAp
         FOREIGN KEY (osoba) REFERENCES Osoba(id),
         FOREIGN KEY (folder) REFERENCES Folder(id)
     );
-            `);
-    const { method, body } = req;
-
-    const user = await verifySessionInApi(req as unknown as NextApiRequest, res);
-
-    if (!user) { return; }
+    `);
 
     if (method === 'POST') {
         const form = formidable({})
@@ -59,8 +50,8 @@ export default async function multimediaHandler(req: NextApiRequest, res: NextAp
                 const blob = await put(`media-${user.id}-${crypto.randomBytes(16).toString('base64url')}.${(file.mimetype || 'image/png').split('/')[1]}`, fs.readFileSync(file.filepath), { access: 'public', addRandomSuffix: false });
 
                 const result = await db.query(
-                    `INSERT INTO Multimedia (osoba, dane) VALUES ($1, $2) RETURNING *;`,
-                    [user.id, blob.url]
+                    `INSERT INTO Multimedia (osoba, dane) VALUES ($1, $2, $3) RETURNING *;`,
+                    [user.id, blob.url, req.query.id]
                 );
 
 
@@ -74,9 +65,8 @@ export default async function multimediaHandler(req: NextApiRequest, res: NextAp
                 res.status(500).json({ message: 'Internal server error', error });
             }
         })
-
     } else if (method === 'GET') {
-        // Retrieve all multimedia
+        // Retrieve all notes
         try {
             const result = await db.query(`SELECT * FROM Multimedia WHERE folder IS NULL`);
             res.status(200).json(result.rows);
@@ -84,8 +74,31 @@ export default async function multimediaHandler(req: NextApiRequest, res: NextAp
             console.error(error);
             res.status(500).json({ message: 'Internal server error', error });
         }
+    } else if (method === 'DELETE') {
+        // Delete a notatka
+        try {
+            if(!user.administrator || !user.edytowanieCudzychMultimediów){
+                res.status(401).json({ message: "Unauthorized" });
+                return;
+            }
+            const result = await db.query(
+                `DELETE FROM Multimedia WHERE folder = $1 RETURNING *;`,
+                [req.query.id]
+            );
+
+            del(result.rows.map((row: any) => row.dane));
+
+            if (result.rowCount === 0) {
+                res.status(404).json({ message: 'Multimedia not found' });
+            } else {
+                res.status(200).json({ message: 'Multimedia deleted successfully', deletedFolder: result.rows[0] });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error', error });
+        }
     } else {
-        res.setHeader('Allow', ['GET', 'POST']);
+        res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
         res.status(405).json({ message: `Method ${method} Not Allowed` });
     }
 }

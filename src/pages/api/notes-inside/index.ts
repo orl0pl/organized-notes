@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import db from '../../../utils/db'; // Replace with your actual path to the db module
 import { verifySessionInApi } from '@/utils/session';
 
-export default async function folderHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function noteHandler(req: NextApiRequest, res: NextApiResponse) {
     const { method, body } = req;
 
     const user = await verifySessionInApi(req, res);

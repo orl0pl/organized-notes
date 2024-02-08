@@ -22,10 +22,15 @@
     "cookies": "^0.9.1",
     "eslint": "8.56.0",
     "eslint-config-next": "14.0.4",
+    "formidable": "^3.5.1",
     "md3-react": "^1.0.15",
     "next": "14.0.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "5.3.3"
+  },
+  "devDependencies": {
+    "@types/formidable": "^3.4.5",
+    "@types/multiparty": "^0.0.36"
   }
 }

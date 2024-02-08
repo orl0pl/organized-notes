@@ -24,7 +24,6 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 		FOREIGN KEY (ostatnia_wersja) REFERENCES Notatka(id) ON DELETE SET NULL
 	);
             `);
-
     if (method === 'POST') {
         const { nazwa,  tekst, ostatnia_wersja } = body;
         try {

@@ -41,14 +41,14 @@ CREATE TABLE Osoba (
 CREATE TABLE Sesja (
     id VARCHAR(256) PRIMARY KEY,
     osoba INT,
-    wygasa DATETIME DEFAULT CURRENT_TIMESTAMP + INTERVAL 1 WEEK,
+    wygasa TIMESTAMP DEFAULT CURRENT_TIMESTAMP + INTERVAL 1 WEEK,
     FOREIGN KEY (osoba) REFERENCES Osoba(id)
 );
 
 CREATE TABLE Multimedia (
-    id INT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     osoba INT,
-    utworzone DATETIME,
+    utworzone TIMESTAMP CURRENT_TIMESTAMP,
     folder INT,
     dane VARCHAR(255),
     FOREIGN KEY (osoba) REFERENCES Osoba(id),
@@ -80,3 +80,11 @@ CREATE TABLE TagFolderu (
     PRIMARY KEY (idFolderu, klucz),
     FOREIGN KEY (idFolderu) REFERENCES Folder(id)
 );
+
+CREATE TABLE IF NOT EXISTS TagMultimedia (
+        idMultimedia SERIAL,
+        klucz VARCHAR(255),
+        wartosc VARCHAR(255),
+        PRIMARY KEY (idMultimedia, klucz),
+        FOREIGN KEY (idMultimedia) REFERENCES Multimedia(id)
+    );

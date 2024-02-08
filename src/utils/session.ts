@@ -42,7 +42,7 @@ const cookies = new Cookies(req, res);
 }
 
 export async function verifySessionInApi(req: NextApiRequest, res: NextApiResponse) {
-  const session = req.cookies.session_id || req.body.session_id;
+  const session = req.cookies.session_id || req.body.session_id || req.query.session_id || null;
   
 	const sessionInDb = await db.query(`SELECT * FROM Sesja WHERE id = $1`, [session]);
   
