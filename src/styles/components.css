@@ -1,0 +1,87 @@
+/* GENERIC BUTTON */
+
+button {
+    all: unset;
+    border-radius: 1000px;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+}
+
+button > .state {
+    border-radius: 1000px;
+    height: 40px;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
+
+button:disabled {
+    opacity: 0.12;
+}
+
+/* FILLED BUTTON */
+
+button.filled {
+    background-color: rgb(var(--md-sys-color-primary));
+    color: rgb(var(--md-sys-color-on-primary));
+}
+
+button.filled:hover > .state {
+    background-color: rgba(var(--md-sys-color-on-primary), 0.08);
+}
+
+button.filled:active > .state {
+    background-color: rgba(var(--md-sys-color-on-primary), 0.12);
+}
+
+/* TEXT BUTTON */
+
+button.text {
+    background-color: transparent;
+    color: inherit;
+}
+
+button.text:hover > .state {
+    background-color: rgba(var(--md-sys-color-primary), 0.08);
+    color: rgb(var(--md-sys-color-primary));
+}
+
+button.text:active > .state {
+    background-color: rgba(var(--md-sys-color-primary), 0.12);
+    color: rgb(var(--md-sys-color-primary));
+}
+
+/* TONAL BUTTON */
+
+button.tonal {
+    background-color: rgb(var(--md-sys-color-secondary-container));
+    color: rgb(var(--md-sys-color-on-secondary-container));
+}
+
+button.tonal:hover > .state {
+    background-color: rgba(var(--md-sys-color-on-secondary-container), 0.08);
+}
+
+button.tonal:active > .state {
+    background-color: rgba(var(--md-sys-color-on-secondary-container), 0.12);
+}
+
+/* OUTLINED BUTTON */
+
+button.outlined {
+    background-color: transparent;
+    color: rgb(var(--md-sys-color-primary));
+    border: 1px solid rgb(var(--md-sys-color-outline));
+}
+
+button.outlined:hover > .state {
+    background-color: rgba(var(--md-sys-color-primary), 0.08);
+}
+
+button.outlined:active > .state {
+    background-color: rgba(var(--md-sys-color-primary), 0.12);
+}

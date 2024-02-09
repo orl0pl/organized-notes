@@ -1,11 +1,8 @@
-import { Roboto } from "next/font/google";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
-
-const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500"] });
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await sessionServerSideProps(context);
@@ -28,7 +25,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
     }
   }, []);
   return (
-    <div className={"app "+roboto.className}>
+    <div className={"app"}>
 
       <main
         style={{
@@ -37,16 +34,26 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
       >
         <Link href={'dashboard/userManagement'}>Dashboard</Link><br />
         <Link href={'dashboard/login'}>Login</Link><br />
-        <button onClick={()=>{
+        <button className="tonal" onClick={() => {
           fetch('/api/logout', {
             method: 'POST',
           })
-        }}>Logout</button>
+        }}><div className="state">
+            Logout</div></button><br />
 
-        {JSON.stringify(loggedInUser)}
+        {/* {JSON.stringify(loggedInUser)} */}
+
+        <button className="filled">
+          <div className="state">Test button</div>
+        </button> <br />
+        <button className="text">
+          <div className="state">Test button2</div>
+        </button>
+        <button className="outlined">
+          <div className="state">Test button2</div>
+        </button>
 
 
-        
       </main>
     </div>
 

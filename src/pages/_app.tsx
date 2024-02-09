@@ -1,7 +1,25 @@
-import '@/styles/globals.css'
-import { ThemeProvider } from 'md3-react'
-import type { AppProps } from 'next/app'
+import "@/styles/globals.css";
+import { ThemeProvider } from "next-themes";
+import type { AppProps } from "next/app";
+import { Roboto } from "next/font/google";
+const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500"] });
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+	return (
+		<ThemeProvider
+    attribute="class"
+			themes={[
+				"green-light",
+				"green-light-medium-contrast",
+				"green-light-high-contrast",
+				"green-dark",
+				"green-dark-medium-contrast",
+				"green-dark-high-contrast",
+			]}
+		>
+			<div className={roboto.className}>
+			<Component {...pageProps} />
+			</div>
+		</ThemeProvider>
+	);
 }
