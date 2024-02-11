@@ -48,11 +48,15 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
         </button> <br />
         <button className="text">
           <div className="state">Test button2</div>
-        </button>
+        </button> <br />
         <button className="outlined">
           <div className="state">Test button2</div>
-        </button>
-
+        </button> <br />
+        <div className="input-container">
+          <span className="label-text">Label text</span>
+          <input type="text" />
+          <span className="supporting-text">Supporting text</span>
+        </div>
 
       </main>
     </div>

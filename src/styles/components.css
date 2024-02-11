@@ -17,6 +17,7 @@ button > .state {
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s ease;
+    transition: color 0.2s ease;
 }
 
 button:disabled {
@@ -84,4 +85,41 @@ button.outlined:hover > .state {
 
 button.outlined:active > .state {
     background-color: rgba(var(--md-sys-color-primary), 0.12);
+}
+
+/* TEXT INPUT */
+
+.input-container {
+    position: relative;
+}
+
+.input-container > .supporting-text {
+    position: absolute;
+    bottom: 0px;
+    
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 400;
+    letter-spacing: 0.4px;
+    color: rgb(var(--md-sys-color-on-surface-variant));
+}
+
+.input-container > .label-text {
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+    color: rgb(var(--md-sys-color-on-surface-variant));
+}
+
+
+.input-container > input {
+    all: unset;
+    background-color: rgb(var(--md-sys-color-surface-container-highest));
+    border-radius: 4px 4px 0 0;
+    height: 56px;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
 }

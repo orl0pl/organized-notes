@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
+const withLitSSR = require('@lit-labs/nextjs')();
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   async headers() {
     return [
       {
@@ -17,4 +19,4 @@ const nextConfig = {
   }
 }
 
-module.exports = nextConfig
+module.exports = withLitSSR(nextConfig, {addDeclarativeShadowDomPolyfill: false});
