@@ -91,6 +91,10 @@ button.outlined:active > .state {
 
 .input-container {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    /* height: 48px; */
 }
 
 .input-container > .supporting-text {
@@ -105,21 +109,44 @@ button.outlined:active > .state {
 }
 
 .input-container > .label-text {
+    position: absolute;
+    top: 8px;
+    left: 16px;
     font-size: 14px;
     line-height: 20px;
     font-weight: 400;
     letter-spacing: 0.1px;
     color: rgb(var(--md-sys-color-on-surface-variant));
+    transition: top 0.2s ease, opacity 0.2s ease;
 }
 
+.input-container > input:placeholder-shown+.label-text{
+    opacity: 0;
+    /* display: none; */
+    top: 24px;
+    
+}
 
 .input-container > input {
     all: unset;
+    box-sizing: border-box;
+    padding: 24px 4px 8px 17px;
     background-color: rgb(var(--md-sys-color-surface-container-highest));
     border-radius: 4px 4px 0 0;
-    height: 56px;
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
     letter-spacing: 0.5px;
+    border-bottom: 1px solid rgb(var(--md-sys-color-outline));
+    transition: border-bottom 0.2s ease;
+    transition: padding 0.2s ease;
+}
+
+.input-container > input:placeholder-shown {
+    padding: 16px 4px 16px 17px;
+}
+
+.input-container > input:focus {
+    outline: none;
+    border-bottom: 2px solid rgb(var(--md-sys-color-primary));
 }

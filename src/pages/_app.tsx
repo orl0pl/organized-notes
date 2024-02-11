@@ -7,7 +7,7 @@ const roboto = Roboto({ subsets: ["latin"], weight: ["400", "500"] });
 export default function App({ Component, pageProps }: AppProps) {
 	return (
 		<ThemeProvider
-    attribute="class"
+			attribute="class"
 			themes={[
 				"green-light",
 				"green-light-medium-contrast",
@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }: AppProps) {
 			]}
 		>
 			<div className={roboto.className}>
-			<Component {...pageProps} />
+				<Component {...pageProps} />
 			</div>
 		</ThemeProvider>
 	);

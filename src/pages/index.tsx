@@ -53,9 +53,9 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           <div className="state">Test button2</div>
         </button> <br />
         <div className="input-container">
+          
+          <input placeholder="Label text" type="text" />
           <span className="label-text">Label text</span>
-          <input type="text" />
-          <span className="supporting-text">Supporting text</span>
         </div>
 
       </main>
