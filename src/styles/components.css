@@ -31,7 +31,7 @@ button.filled {
     color: rgb(var(--md-sys-color-on-primary));
 }
 
-button.filled:hover > .state {
+button.filled:hover > .state, button.filled:focus-visible > .state {
     background-color: rgba(var(--md-sys-color-on-primary), 0.08);
 }
 
@@ -46,7 +46,7 @@ button.text {
     color: inherit;
 }
 
-button.text:hover > .state {
+button.text:hover > .state, button.text:focus-visible > .state {
     background-color: rgba(var(--md-sys-color-primary), 0.08);
     color: rgb(var(--md-sys-color-primary));
 }
@@ -63,7 +63,7 @@ button.tonal {
     color: rgb(var(--md-sys-color-on-secondary-container));
 }
 
-button.tonal:hover > .state {
+button.tonal:hover > .state, button.tonal:focus-visible > .state {
     background-color: rgba(var(--md-sys-color-on-secondary-container), 0.08);
 }
 
@@ -79,7 +79,7 @@ button.outlined {
     border: 1px solid rgb(var(--md-sys-color-outline));
 }
 
-button.outlined:hover > .state {
+button.outlined:hover > .state, button.outlined:focus-visible > .state {
     background-color: rgba(var(--md-sys-color-primary), 0.08);
 }
 
@@ -146,7 +146,8 @@ button.outlined:active > .state {
     padding: 16px 4px 16px 17px;
 }
 
-.input-container > input:focus {
+.input-container > input:focus-visible {
     outline: none;
     border-bottom: 2px solid rgb(var(--md-sys-color-primary));
+    background-color: rgb(var(--md-sys-color-primary-container));
 }
