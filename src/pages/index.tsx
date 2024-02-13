@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
+import { useTheme } from "next-themes";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await sessionServerSideProps(context);
@@ -12,20 +13,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 export default function Home({ loggedInUser }: { loggedInUser: User }) {
-  const [color, setColor] = useState("#ff0000");
-  const [compact, setCompact] = useState(
-    true
-  )
-
-  useEffect(() => {
-    if (window) {
-      window
-        .matchMedia("(max-width: 768px)")
-        .addEventListener('change', e => setCompact(e.matches));
-    }
-  }, []);
+  const { setTheme } = useTheme();
   return (
-    <div className={"app"}>
+    <div className={"app"} style={{ backgroundColor: "rgb(var(--md-sys-color-background))", color: "rgb(var(--md-sys-color-on-background))" }}>
 
       <main
         style={{
@@ -51,13 +41,21 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
         </button> <br />
         <button className="outlined">
           <div className="state">Test button2</div>
-        </button> <br />
+        </button> <br /><br />
         <div className="input-container">
-          
+
           <input placeholder="Label text" type="text" />
           <span className="label-text">Label text</span>
-        </div>
+        </div><br /><br />
+        <div className="outlined-input-container">
 
+          <input onChange={(e) => ['green-dark', 'green-dark-medium-contrast', 'green-dark-high-contrast', 'green-light', 'green-light-medium-contrast', 'green-light-high-contrast'].includes(e.target.value) && setTheme(e.target.value)} placeholder="Label text" type="text" />
+          <span className="label-text">Label text</span>
+        </div><br /><br />
+        <label className="switch-container">
+          <input type="checkbox"/>
+          <span className="switch-slider"></span>
+        </label>
       </main>
     </div>
 

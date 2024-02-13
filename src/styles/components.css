@@ -89,6 +89,10 @@ button.outlined:active > .state {
 
 /* TEXT INPUT */
 
+input::placeholder {
+    color: rgb(var(--md-sys-color-on-surface-variant));
+}
+
 .input-container {
     position: relative;
     display: flex;
@@ -108,7 +112,7 @@ button.outlined:active > .state {
     color: rgb(var(--md-sys-color-on-surface-variant));
 }
 
-.input-container > .label-text {
+.input-container > .label-text, .outlined-input-container > .label-text {
     position: absolute;
     top: 8px;
     left: 16px;
@@ -120,7 +124,7 @@ button.outlined:active > .state {
     transition: top 0.2s ease, opacity 0.2s ease;
 }
 
-.input-container > input:placeholder-shown+.label-text{
+.input-container > input:placeholder-shown+.label-text, .outlined-input-container > input:placeholder-shown+.label-text {
     opacity: 0;
     /* display: none; */
     top: 24px;
@@ -132,6 +136,7 @@ button.outlined:active > .state {
     box-sizing: border-box;
     padding: 24px 4px 8px 17px;
     background-color: rgb(var(--md-sys-color-surface-container-highest));
+    color: rgb(var(--md-sys-color-on-surface));
     border-radius: 4px 4px 0 0;
     font-size: 16px;
     line-height: 24px;
@@ -149,5 +154,92 @@ button.outlined:active > .state {
 .input-container > input:focus-visible {
     outline: none;
     border-bottom: 2px solid rgb(var(--md-sys-color-primary));
-    background-color: rgb(var(--md-sys-color-primary-container));
+}
+
+/* OUTLINED TEXT INPUT */
+
+.outlined-input-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    /* height: 48px; */
+}
+
+.outlined-input-container > input {
+    all: unset;
+    box-sizing: border-box;
+    padding: 16px 4px 16px 17px;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    color: rgb(var(--md-sys-color-on-surface));
+    border-radius: 4px 4px 0 0;
+    border: 1px solid rgb(var(--md-sys-color-outline));
+    transition: border 0.2s ease;
+    transition: padding 0.2s ease;
+}
+
+.outlined-input-container > .label-text {
+    position: absolute;
+    background-color: rgb(var(--md-sys-color-background));
+    padding: 2px 4px;
+    top: -12px;
+}
+
+.outlined-input-container > input:focus-visible {
+    outline: none;
+    border: 2px solid rgb(var(--md-sys-color-on-surface));
+}
+
+/* SWITCH */
+
+.switch-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    width: 52px;
+    height: 32px;
+    border: 2px solid rgb(var(--md-sys-color-outline));
+    border-radius: 1000px;
+    background-color: rgb(var(--md-sys-color-surface-container));
+}
+
+.switch-container > input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-container > .switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 1000px;
+    transition: background-color 0.2s ease;
+    transition: left 0.2s ease;
+
+}
+
+.switch-container > .switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 4px;
+    background-color: rgb(var(--md-sys-color-outline));
+    border-radius: 1000px;
+    transition: background-color 0.2s ease;
+    transition: left 0.2s ease;
+}
+
+.switch-container > input:checked+.switch-slider::before {
+    left: 24px;
+    background-color: rgb(var(--md-sys-color-primary));
 }
