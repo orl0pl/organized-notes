@@ -243,3 +243,55 @@ input::placeholder {
     left: 24px;
     background-color: rgb(var(--md-sys-color-primary));
 }
+
+/* NAVIGATION */
+
+nav {
+    display: flex;
+    background-color: rgb(var(--md-sys-color-surface-container-highest));
+    flex-direction: column;
+    width: 80px;
+}
+
+nav > a {
+    text-decoration: none;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: rgb(var(--md-sys-color-on-surface-variant));
+    transition: color 0.2s ease;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+nav > a > svg {
+    height: 24px;
+    width: 24px;
+    padding: 4px 0px;
+    border-radius: 9999px;
+    transition: padding 0.2s ease;
+}
+
+nav > a:hover > svg, nav > a:focus-visible > svg {
+    background-color: rgba(var(--md-sys-color-primary), 0.08);
+    padding: 4px 16px;
+}
+
+nav > a:active > svg {
+    background-color: rgba(var(--md-sys-color-primary), 0.12);
+    padding: 4px 16px;
+}
+
+nav > a.active {
+    color: rgb(var(--md-sys-color-on-surface));
+    font-weight: 700;
+}
+
+nav > a.active > svg {
+    color: rgb(var(--md-sys-color-on-secondary-container));
+    background-color: rgba(var(--md-sys-color-secondary-container));
+    padding: 4px 16px;
+}

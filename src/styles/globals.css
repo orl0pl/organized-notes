@@ -20,6 +20,9 @@ body {
     .app {
         flex-direction: column-reverse;
     }
+    nav {
+        flex-direction: row;
+    }
 }
 
 

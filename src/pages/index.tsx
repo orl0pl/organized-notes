@@ -4,6 +4,8 @@ import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 import { useTheme } from "next-themes";
+import { mdiCog, mdiHome } from "@mdi/js";
+import Icon from "@mdi/react";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await sessionServerSideProps(context);
@@ -16,7 +18,16 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
   const { setTheme } = useTheme();
   return (
     <div className={"app"} style={{ backgroundColor: "rgb(var(--md-sys-color-background))", color: "rgb(var(--md-sys-color-on-background))" }}>
-
+      <nav className="navigation-rail">
+        <Link href="/" className="active">
+          <Icon path={mdiHome}/>
+          <span>Home</span>
+        </Link>
+        <Link href="/dashboard">
+          <Icon path={mdiCog}/>
+          <span>Dashboard</span>
+        </Link>
+      </nav>
       <main
         style={{
           padding: 16
