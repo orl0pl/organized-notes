@@ -51,7 +51,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           <div className="state">Test button2</div>
         </button> <br />
         <button className="outlined">
-          <div className="state">Test button2</div>
+          <div className="state"><Icon path={mdiCog}/> Test button2</div>
         </button> <br /><br />
         <div className="input-container">
 

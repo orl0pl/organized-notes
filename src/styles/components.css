@@ -24,6 +24,12 @@ button:disabled {
     opacity: 0.12;
 }
 
+button > .state > svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+}
+
 /* FILLED BUTTON */
 
 button.filled {
