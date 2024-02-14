@@ -97,6 +97,7 @@ button.outlined:active > .state {
 
 input::placeholder {
     color: rgb(var(--md-sys-color-on-surface-variant));
+    transition: color 0.2s ease;
 }
 
 .input-container {
@@ -185,6 +186,11 @@ input::placeholder {
     border: 2px solid rgb(var(--md-sys-color-on-surface));
 }
 
+.outlined-input-container > input:focus-visible::placeholder {
+    color: transparent;
+}
+
+
 /* SWITCH */
 
 .switch-container {
@@ -237,6 +243,25 @@ input::placeholder {
     height: 24px;
     width: 24px;
     background-color: rgb(var(--md-sys-color-primary));
+}
+
+.switch-container > .switch-slider > svg {
+    height: 0px;
+    width: 0px;
+    left: 0px;
+    opacity: 0;
+    transition: left 0.2s ease, opacity 0.1s ease;
+    color: rgb(var(--md-sys-color-on-primary));
+}
+
+.switch-container > input:checked+.switch-slider > svg {
+    opacity: 1;
+    position: relative;
+    left: 26px;
+    top: 6px;
+    height: 20px;
+    width: 20px;
+    transition: left 0.2s ease;
 }
 
 /* NAVIGATION */

@@ -4,30 +4,37 @@ import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 import { useTheme } from "next-themes";
-import { mdiCog, mdiHome } from "@mdi/js";
+import { mdiCog, mdiCreation, mdiHome, mdiPen } from "@mdi/js";
+import Button from "@/components/button";
 import Icon from "@mdi/react";
+import Switch from "@/components/switch";
+import { Input } from "@/components/input";
+import { NavigationRail, NavigationRailItem } from "@/components/navigation";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useTranslation } from "next-i18next";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  
   const session = await sessionServerSideProps(context);
   return {
-    ...session
+    ...session,
+    props: await serverSideTranslations(context.locale || context.req.cookies.NEXT_LOCALE || 'en', [
+      'common',
+    ]),
   }
 }
 
 export default function Home({ loggedInUser }: { loggedInUser: User }) {
   const { setTheme } = useTheme();
+  const {t} = useTranslation()
   return (
     <div className={"app"} style={{ backgroundColor: "rgb(var(--md-sys-color-background))", color: "rgb(var(--md-sys-color-on-background))" }}>
-      <nav className="navigation-rail">
-        <Link href="/" className="active">
-          <Icon path={mdiHome}/>
-          <span>Home</span>
-        </Link>
-        <Link href="/dashboard">
-          <Icon path={mdiCog}/>
-          <span>Dashboard</span>
-        </Link>
-      </nav>
+      <NavigationRail>
+        <NavigationRailItem active icon={mdiHome} text="Home" href="/" />
+        <NavigationRailItem icon={mdiPen} text="Write" href="/editor" />
+        <NavigationRailItem icon={mdiCreation} text="Chat" href="/chat" />
+        <NavigationRailItem icon={mdiCog} text="Settings" href="/settings" />
+      </NavigationRail>
       <main
         style={{
           padding: 16
@@ -43,7 +50,9 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
             Logout</div></button><br />
 
         {/* {JSON.stringify(loggedInUser)} */}
-
+        <Button  type='tonal' icon={mdiCog}>
+          {t('button')}
+        </Button>
         <button className="filled">
           <div className="state">Test button</div>
         </button> <br />
@@ -66,7 +75,9 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
         <label className="switch-container">
           <input type="checkbox"/>
           <span className="switch-slider"></span>
-        </label>
+        </label><br />
+        <Switch icon={mdiCog} /><br />
+        <Input placeholder="label test" type="outlined"/>
       </main>
     </div>
 
