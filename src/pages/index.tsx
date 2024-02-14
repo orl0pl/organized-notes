@@ -12,13 +12,15 @@ import { Input } from "@/components/input";
 import { NavigationRail, NavigationRailItem } from "@/components/navigation";
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { useTranslation } from "next-i18next";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   
   const session = await sessionServerSideProps(context);
+  console.log(context.locale)
   return {
     ...session,
-    props: await serverSideTranslations(context.locale || context.req.cookies.NEXT_LOCALE || 'en', [
+    props: await serverSideTranslations(context.locale || 'en', [
       'common',
     ]),
   }
@@ -26,7 +28,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 export default function Home({ loggedInUser }: { loggedInUser: User }) {
   const { setTheme } = useTheme();
-  const {t} = useTranslation()
+  const router = useRouter();
+  const { pathname, asPath, query } = router;
+  const {t, } = useTranslation()
   return (
     <div className={"app"} style={{ backgroundColor: "rgb(var(--md-sys-color-background))", color: "rgb(var(--md-sys-color-on-background))" }}>
       <NavigationRail>
@@ -53,6 +57,15 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
         <Button  type='tonal' icon={mdiCog}>
           {t('button')}
         </Button>
+        <br />
+        Change lang ({router.locale}):
+        <Switch icon={mdiCog}  checked={router.locale === "en"} onChange={(e)=>{
+            console.log(e.currentTarget.checked ? "en" : "pl", router.locale, e.currentTarget.checked)
+            router.push({ pathname, query }, asPath, {
+              locale: e.currentTarget.checked ? "en" : "pl",
+            });
+        }}/><br />
+        <br />
         <button className="filled">
           <div className="state">Test button</div>
         </button> <br />
