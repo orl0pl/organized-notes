@@ -1,16 +1,18 @@
+import React, { HTMLInputTypeAttribute } from "react";
+
 interface IInputProps {
-	type?: "outlined" | "filled";
+	type?: HTMLInputTypeAttribute,
+	displayType?: "outlined" | "filled";
     placeholder?: string;
 }
 
 export function Input({
-	children,
-	type,
+	displayType,
     placeholder,
 	...props
-}: React.HTMLAttributes<HTMLInputElement> & IInputProps) {
+}: React.InputHTMLAttributes<HTMLInputElement> & IInputProps) {
 	return (
-		<div className={type === "outlined" ? "outlined-input-container" : "input-container"}>
+		<div className={displayType === "outlined" ? "outlined-input-container" : "input-container"}>
 			<input placeholder={placeholder} {...props} />
 			<span className="label-text">{placeholder}</span>
 		</div>

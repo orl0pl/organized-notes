@@ -2,15 +2,16 @@ import Icon from "@mdi/react";
 import React from "react";
 
 interface IButtonProps {
-    type: 'filled' | 'text' | 'outlined' | 'tonal',
+    type?: 'submit'
+    displayType: 'filled' | 'text' | 'outlined' | 'tonal',
     icon?: string
 }
 
-export default function Button({ children, type, icon, ...props }: React.HTMLAttributes<HTMLButtonElement> & IButtonProps) {
+export default function Button({ children, displayType, icon, ...props }: React.HTMLAttributes<HTMLButtonElement> & IButtonProps) {
     return (
         <button
             {...props}
-            className={type}
+            className={displayType}
         >
             <div className="state">
                 {icon && <Icon path={icon} />}

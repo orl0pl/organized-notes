@@ -1,11 +1,26 @@
+import Button from '@/components/button';
+import { Input } from '@/components/input';
+import { useTheme } from 'next-themes';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const LoginPage: React.FC = () => {
   const [login, setLogin] = useState('');
   const [haslo, setHaslo] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError]  = useState('');
+  const {theme, setTheme } = useTheme()
   const {query} = useRouter()
+
+  useEffect(()=>{
+    if(!theme){
+      setTheme('green-light')
+    }
+    if(localStorage){
+      if(!localStorage.getItem('theme')){
+        setTheme('green-light')
+      }
+    }
+  })
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,29 +53,27 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{display: 'flex', alignItems: 'center', flexDirection: 'column', justifyContent: 'center', flex: 1, width: '100vw'}}>
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="login">Login:</label>
-          <input
+          <Input
             id="login"
             type="text"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
+            placeholder='Login'
           />
-        </div>
-        <div>
-          <label htmlFor="haslo">Hasło:</label>
-          <input
+        <br />
+          <Input
             id="haslo"
             type="password"
             value={haslo}
+            placeholder='Password'
             onChange={(e) => setHaslo(e.target.value)}
           />
-        </div>
         {error && <div style={{ color: 'red' }}>{error}</div>}
-        <button type="submit">Zaloguj się</button>
+        <br />
+        <Button displayType='filled' type="submit">Zaloguj się</Button>
       </form>
     </div>
   );
