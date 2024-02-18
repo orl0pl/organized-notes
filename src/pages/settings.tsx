@@ -10,29 +10,32 @@ import Icon from "@mdi/react";
 import Switch from "@/components/switch";
 import { Input } from "@/components/input";
 import { NavigationRail, NavigationRailItem } from "@/components/navigation";
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  
   const session = await sessionServerSideProps(context);
-  console.log(context.locale)
+  console.log(context.locale);
   return {
     ...session,
-    props: await serverSideTranslations(context.locale || 'en', [
-      'common',
-    ]),
-  }
+    props: await serverSideTranslations(context.locale || "en", ["common"]),
+  };
 }
 
 export default function Home({ loggedInUser }: { loggedInUser: User }) {
-  const { setTheme } = useTheme();
+  const { setTheme, theme } = useTheme();
   const router = useRouter();
   const { pathname, asPath, query } = router;
-  const {t, } = useTranslation()
+  const { t } = useTranslation();
   return (
-    <div className={"app"} style={{ backgroundColor: "rgb(var(--md-sys-color-background))", color: "rgb(var(--md-sys-color-on-background))" }}>
+    <div
+      className={"app"}
+      style={{
+        backgroundColor: "rgb(var(--md-sys-color-background))",
+        color: "rgb(var(--md-sys-color-on-background))",
+      }}
+    >
       <NavigationRail>
         <NavigationRailItem active icon={mdiHome} text="Home" href="/" />
         <NavigationRailItem icon={mdiPen} text="Write" href="/editor" />
@@ -41,16 +44,35 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
       </NavigationRail>
       <main
         style={{
-          padding: 16
+          padding: 16,
         }}
       >
         <h1>Ustawienia</h1>
-        Motyw:
-        Zielony
+        Motyw: Zielony
         <br />
-        Tryb ciemny <Switch icon={mdiCog} onChange={(e)=>{setTheme(t)}}/><br />
+        Tryb ciemny{" "}
+        <Switch
+          icon={mdiCog}
+          defaultChecked={[
+            "green-dark",
+            "green-dark-medium-contrast",
+            "green-dark-high-contrast",
+          ].includes(theme || "")}
+          onChange={(e) => {
+            const ischecked = (e.target as HTMLInputElement).checked;
+            if (!theme) {
+              setTheme("green-light");
+              return;
+            }
+            setTheme(
+              ischecked && theme !== undefined
+                ? theme?.replace("dark", "light")
+                : theme?.replace("light", "dark")
+            );
+          }}
+        />
+        <br />
       </main>
     </div>
-
   );
 }

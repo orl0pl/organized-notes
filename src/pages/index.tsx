@@ -54,7 +54,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
             Logout</div></button><br />
 
         {/* {JSON.stringify(loggedInUser)} */}
-        <Button  type='tonal' icon={mdiCog}>
+        <Button  displayType='tonal' icon={mdiCog}>
           {t('button')}
         </Button>
         <br />
