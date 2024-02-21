@@ -5,7 +5,7 @@ import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 import { useTheme } from "next-themes";
-import { mdiCog, mdiCreation, mdiHome, mdiPen } from "@mdi/js";
+import { mdiCog, mdiCreation, mdiHome, mdiPen, mdiWeatherNight } from "@mdi/js";
 import Button from "@/components/button";
 import Icon from "@mdi/react";
 import Switch from "@/components/switch";
@@ -20,7 +20,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   console.log(context.locale);
   return {
     ...session,
-    props: await serverSideTranslations(context.locale || "en", ["common"]),
+    props: await serverSideTranslations(context.locale || "en", ["common", "settings"]),
   };
 }
 
@@ -28,7 +28,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
   const { setTheme, theme } = useTheme();
   const router = useRouter();
   const { pathname, asPath, query } = router;
-  const { t } = useTranslation();
+  const { t } = useTranslation('settings');
   return (
     <div
       className={"app"}
@@ -53,18 +53,18 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           padding: 16,
         }}
       >
-        <h1 className="display-medium">Ustawienia</h1>
+        <h1 className="display-medium">{t("settings.title")}</h1>
         Motyw: Zielony
         <br />
         <div className={styles.settingsGrid}>
           <label htmlFor="theme" className="body-large">
-            Tryb ciemny
+            {t("settings.theme.darkmode")}
           </label>
           <Switch
-            icon={mdiCog}
+            icon={mdiWeatherNight}
             id="theme"
             defaultChecked={
-              ![
+              [
                 "green-dark",
                 "green-dark-medium-contrast",
                 "green-dark-high-contrast",
@@ -83,6 +83,13 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
               );
             }}
           />
+          <label htmlFor="lang" className="body-large">
+            {t("settings.language.select-language")}
+          </label>
+          <select defaultValue={router.locale} name="lang" id="lang" onChange={(e) => router.push({ pathname, query }, asPath, { locale: e.target.value })}>
+            <option value="pl">Polski</option>
+            <option value="en">English</option>
+          </select>
         </div>
         <br />
       </main>

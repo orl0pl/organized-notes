@@ -1,0 +1,11 @@
+{
+    "settings": {
+        "language": {
+            "select-language": "Language"
+        },
+        "theme": {
+            "darkmode": "Dark mode"
+        },
+        "title": "Settings"
+    }
+}

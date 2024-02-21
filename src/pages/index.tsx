@@ -4,7 +4,7 @@ import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 import { useTheme } from "next-themes";
-import { mdiCog, mdiCreation, mdiHome, mdiPen } from "@mdi/js";
+import { mdiCog, mdiCreation, mdiHome, mdiPen, mdiWeatherNight } from "@mdi/js";
 import Button from "@/components/button";
 import Icon from "@mdi/react";
 import Switch from "@/components/switch";
@@ -89,8 +89,6 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           <input type="checkbox"/>
           <span className="switch-slider"></span>
         </label><br />
-        <Switch icon={mdiCog} /><br />
-        <Input placeholder="label test" type="outlined"/>
       </main>
     </div>
 

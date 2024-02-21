@@ -324,3 +324,18 @@ nav > a.active > svg {
         justify-content: space-evenly;
     }
 }
+
+/* GENERIC SELECT */
+
+select {
+    /* all: unset; */
+    font-family: inherit;
+    font-size: inherit;
+    color: rgb(var(--md-sys-color-on-surface-container));
+    border: 1px solid rgb(var(--md-sys-color-outline));
+    border-radius: .5rem;
+    background-color: rgb(var(--md-sys-color-surface-container));
+    /* height: 40px; */
+    max-width: fit-content;
+    padding: 0.5rem 1rem;
+}
