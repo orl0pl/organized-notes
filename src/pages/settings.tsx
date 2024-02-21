@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styles from "@/styles/Home.module.css";
 import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
@@ -37,40 +38,52 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
       }}
     >
       <NavigationRail>
-        <NavigationRailItem active icon={mdiHome} text="Home" href="/" />
+        <NavigationRailItem icon={mdiHome} text="Home" href="/" />
         <NavigationRailItem icon={mdiPen} text="Write" href="/editor" />
         <NavigationRailItem icon={mdiCreation} text="Chat" href="/chat" />
-        <NavigationRailItem icon={mdiCog} text="Settings" href="/settings" />
+        <NavigationRailItem
+          active
+          icon={mdiCog}
+          text="Settings"
+          href="/settings"
+        />
       </NavigationRail>
       <main
         style={{
           padding: 16,
         }}
       >
-        <h1>Ustawienia</h1>
+        <h1 className="display-medium">Ustawienia</h1>
         Motyw: Zielony
         <br />
-        Tryb ciemny{" "}
-        <Switch
-          icon={mdiCog}
-          defaultChecked={[
-            "green-dark",
-            "green-dark-medium-contrast",
-            "green-dark-high-contrast",
-          ].includes(theme || "")}
-          onChange={(e) => {
-            const ischecked = (e.target as HTMLInputElement).checked;
-            if (!theme) {
-              setTheme("green-light");
-              return;
+        <div className={styles.settingsGrid}>
+          <label htmlFor="theme" className="body-large">
+            Tryb ciemny
+          </label>
+          <Switch
+            icon={mdiCog}
+            id="theme"
+            defaultChecked={
+              ![
+                "green-dark",
+                "green-dark-medium-contrast",
+                "green-dark-high-contrast",
+              ].includes(theme || "")
             }
-            setTheme(
-              ischecked && theme !== undefined
-                ? theme?.replace("dark", "light")
-                : theme?.replace("light", "dark")
-            );
-          }}
-        />
+            onChange={(e) => {
+              const ischecked = (e.target as HTMLInputElement).checked;
+              if (!theme) {
+                setTheme("green-light");
+                return;
+              }
+              setTheme(
+                ischecked && theme !== undefined
+                  ? theme?.replace("light", "dark")
+                  : theme?.replace("dark", "light")
+              );
+            }}
+          />
+        </div>
         <br />
       </main>
     </div>

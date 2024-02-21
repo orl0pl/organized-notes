@@ -1,3 +1,4 @@
+@import url('material-typography.css');
 html.green-light {
     --md-sys-color-primary: 29, 107, 80;
     --md-sys-color-surface-tint: 29, 107, 80;
