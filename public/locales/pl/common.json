@@ -1,12 +1,3 @@
 {
-  "button": "Przycisk",
-  "settings": {
-    "language": {
-      "select-language": "Język"
-    },
-    "theme": {
-      "darkmode": "Tryb ciemny"
-    },
-    "title": "Ustawienia"
-  }
+  "button": "Przycisk"
 }

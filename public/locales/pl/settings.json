@@ -1,0 +1,15 @@
+{
+  "language": {
+    "select-language": "Język"
+  },
+  "theme": {
+    "darkmode": "Tryb ciemny",
+    "contrast": "Kontrast",
+    "contrast-default": "Domyślny kontrast",
+    "contrast-medium": "Średni kontrast",
+    "contrast-high": "Wysoki kontrast"
+  },
+  "title": "Ustawienia",
+  "logged-in-as": "Zalogowano jako",
+  "logout": "Wyloguj się"
+}

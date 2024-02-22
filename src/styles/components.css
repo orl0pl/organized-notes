@@ -245,6 +245,10 @@ input::placeholder {
     background-color: rgb(var(--md-sys-color-primary));
 }
 
+.switch-container:has(input:focus-visible+.switch-slider) {
+    outline: 1px solid rgb(var(--md-sys-color-on-background));
+}
+
 .switch-container > .switch-slider > svg {
     height: 0px;
     width: 0px;

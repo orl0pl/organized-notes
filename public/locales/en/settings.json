@@ -1,11 +1,15 @@
 {
-    "settings": {
-        "language": {
-            "select-language": "Language"
-        },
-        "theme": {
-            "darkmode": "Dark mode"
-        },
-        "title": "Settings"
-    }
+  "language": {
+    "select-language": "Language"
+  },
+  "theme": {
+    "darkmode": "Dark mode",
+    "contrast": "Contrast",
+    "contrast-default": "Default contrast",
+    "contrast-high": "High contrast",
+    "contrast-medium": "Medium contrast"
+  },
+  "title": "Settings",
+  "logged-in-as": "Logged in as",
+  "logout": "Log out"
 }

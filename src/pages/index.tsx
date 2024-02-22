@@ -17,12 +17,20 @@ import { useRouter } from "next/router";
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   
   const session = await sessionServerSideProps(context);
-  console.log(context.locale)
-  return {
+  console.log(context.locale, {
     ...session,
     props: await serverSideTranslations(context.locale || 'en', [
       'common',
     ]),
+  })
+  return {
+    ...session,
+    props: {
+      ...session.props,
+      ...await serverSideTranslations(context.locale || 'en', [
+        'common',
+      ])
+    },
   }
 }
 
@@ -54,9 +62,6 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
             Logout</div></button><br />
 
         {/* {JSON.stringify(loggedInUser)} */}
-        <Button  displayType='tonal' icon={mdiCog}>
-          {t('button')}
-        </Button>
         <br />
         Change lang ({router.locale}):
         <Switch icon={mdiCog}  checked={router.locale === "en"} onChange={(e)=>{
@@ -89,6 +94,9 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           <input type="checkbox"/>
           <span className="switch-slider"></span>
         </label><br />
+        <p>
+          {JSON.stringify(loggedInUser) || "no user"}
+        </p>
       </main>
     </div>
 

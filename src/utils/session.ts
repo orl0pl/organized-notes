@@ -5,7 +5,7 @@ import db from "./db";
 import { NextRequest } from "next/server";
 
 export async function sessionServerSideProps({ req, res }: GetServerSidePropsContext) {
-const cookies = new Cookies(req, res);
+  const cookies = new Cookies(req, res);
   const session = cookies.get('session_id');
 
   if (!session) {

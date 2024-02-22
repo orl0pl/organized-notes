@@ -2,4 +2,34 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     row-gap: 1rem;
+    align-items: center;
+}
+
+.settingsGrid button {
+    width: fit-content;
+    height: min-content;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profileImg {
+    background-color: rgb(var(--md-sys-color-primary));
+    color: rgb(var(--md-sys-color-on-primary));
+    border-radius: 9999px;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1rem;
 }
