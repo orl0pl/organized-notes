@@ -327,6 +327,10 @@ nav > a.active > svg {
         height: 80px;
         justify-content: space-evenly;
     }
+
+    nav > a {
+        width: 88px;
+    }
 }
 
 /* GENERIC SELECT */

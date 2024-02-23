@@ -20,12 +20,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await sessionServerSideProps(context);
   const cookies = new Cookies(context.req, context.res);
   const cookieLocale = cookies.get("NEXT_LOCALE");
-  console.log(session);
+  console.log({
+    ...session,
+    props: {
+      ...session.props,
+      ...(await serverSideTranslations(cookieLocale || context.locale || "en", ["common", "settings"])),
+    }});
   return {
     ...session,
     props: {
       ...session.props,
-      ...(await serverSideTranslations(cookieLocale ||context.locale || "en", ["common", "settings"])),
+      ...(await serverSideTranslations(cookieLocale || context.locale || "en", ["common", "settings"])),
     },
   };
 }
@@ -40,7 +45,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
     if (typeof window !== "undefined" && loggedInUser) {
       setIsLoading(false);
     }
-  }, []);
+  }, [loggedInUser]);
   if (!isLoading) {
     return (
       <div
@@ -51,13 +56,13 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
         }}
       >
         <NavigationRail>
-          <NavigationRailItem icon={mdiHome} text="Home" href="/" />
-          <NavigationRailItem icon={mdiPen} text="Write" href="/editor" />
-          <NavigationRailItem icon={mdiCreation} text="Chat" href="/chat" />
+          <NavigationRailItem icon={mdiHome} text={t("common:home")} href="/" />
+          <NavigationRailItem icon={mdiPen} text={t("common:editor")} href="/editor" />
+          <NavigationRailItem icon={mdiCreation} text={t("common:chat")} href="/chat" />
           <NavigationRailItem
             active
             icon={mdiCog}
-            text="Settings"
+            text={t("common:settings")}
             href="/settings"
           />
         </NavigationRail>
