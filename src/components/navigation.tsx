@@ -9,10 +9,10 @@ export function NavigationRail({ children }: { children: React.ReactNode }) {
     )
 }
 
-export function NavigationRailItem({ icon, text, href, active }: { icon: string, text: string, href: string, active?: boolean }) {
+export function NavigationRailItem({ icon, text, href, active, inActiveIcon }: { icon: string, text: string, href: string, active?: boolean, inActiveIcon?: string }) {
     return (
         <Link className={active ? "active" : ""} href={href}>
-            <Icon path={icon}/>
+            <Icon path={active ? icon : (inActiveIcon || icon)}/>
             <span>{text}</span>
         </Link>
     )

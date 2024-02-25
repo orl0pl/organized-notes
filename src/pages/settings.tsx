@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import styles from "@/styles/Home.module.css";
+import styles from "@/styles/Settings.module.css";
 import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 import { useTheme } from "next-themes";
-import { mdiCog, mdiCreation, mdiHome, mdiPen, mdiWeatherNight } from "@mdi/js";
+import { mdiCog, mdiCreation, mdiFolder, mdiFolderOpen, mdiFolderOutline, mdiHome, mdiPen, mdiWeatherNight } from "@mdi/js";
 import Button from "@/components/button";
 import Icon from "@mdi/react";
 import Switch from "@/components/switch";
@@ -15,17 +15,12 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
 import Cookies from "cookies";
+import SharedNavBar from "@/components/sharedNavBar";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await sessionServerSideProps(context);
   const cookies = new Cookies(context.req, context.res);
   const cookieLocale = cookies.get("NEXT_LOCALE");
-  console.log({
-    ...session,
-    props: {
-      ...session.props,
-      ...(await serverSideTranslations(cookieLocale || context.locale || "en", ["common", "settings"])),
-    }});
   return {
     ...session,
     props: {
@@ -55,23 +50,15 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           color: "rgb(var(--md-sys-color-on-background))",
         }}
       >
-        <NavigationRail>
-          <NavigationRailItem icon={mdiHome} text={t("common:home")} href="/" />
-          <NavigationRailItem icon={mdiPen} text={t("common:editor")} href="/editor" />
-          <NavigationRailItem icon={mdiCreation} text={t("common:chat")} href="/chat" />
-          <NavigationRailItem
-            active
-            icon={mdiCog}
-            text={t("common:settings")}
-            href="/settings"
-          />
-        </NavigationRail>
+        <SharedNavBar active="settings"/>
         <main
           style={{
             padding: 16,
           }}
         >
           <h1 className="display-medium">{t("settings:title")}</h1>
+          <Link href={'dashboard/userManagement'}>{t("settings:admin-dashboard.title")}</Link><br />
+          <br />
           <div className={styles.settingsGrid}>
             <div className={styles.profile}>
               <div className={`title-large ${styles.profileImg}`}>
@@ -85,7 +72,12 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
                 <span className="title-medium">{loggedInUser.nazwa}</span>
               </div>
             </div>
-            <Button displayType={"outlined"}>{t("settings:logout")}</Button>
+            <Button displayType={"outlined"} onClick={()=>{
+              fetch('/api/logout', {
+                method: 'POST',
+              });
+              router.reload();
+            }}>{t("settings:logout")}</Button>
             <label htmlFor="theme" className="body-large">
               {t("settings:theme.darkmode")}
             </label>

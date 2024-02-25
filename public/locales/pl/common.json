@@ -1,3 +1,7 @@
 {
-  "button": "Przycisk"
+  "button": "Przycisk",
+  "chat": "Czat",
+  "editor": "Edytor",
+  "home": "Przeglądaj",
+  "settings": "Ustawienia"
 }

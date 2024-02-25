@@ -1,104 +1,94 @@
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import { GetServerSidePropsContext } from "next";
 import User from "@/interfaces/user";
 import { sessionServerSideProps } from "@/utils/session";
 import { useTheme } from "next-themes";
-import { mdiCog, mdiCreation, mdiHome, mdiPen, mdiWeatherNight } from "@mdi/js";
-import Button from "@/components/button";
-import Icon from "@mdi/react";
-import Switch from "@/components/switch";
-import { Input } from "@/components/input";
-import { NavigationRail, NavigationRailItem } from "@/components/navigation";
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import { useTranslation } from "next-i18next";
 import { useRouter } from "next/router";
+import SharedNavBar from "@/components/sharedNavBar";
+import styles from "@/styles/Home.module.css";
+import { useEffect, useState } from "react";
+import Icon from "@mdi/react";
+import { mdiFileDocument, mdiFolder, mdiFolderPlus } from "@mdi/js";
+import FAB from "@/components/fab";
+import Spinner from "@/components/spinner";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  
   const session = await sessionServerSideProps(context);
-  console.log(context.locale, {
-    ...session,
-    props: await serverSideTranslations(context.locale || 'en', [
-      'common',
-    ]),
-  })
   return {
     ...session,
     props: {
       ...session.props,
-      ...await serverSideTranslations(context.locale || 'en', [
-        'common',
-      ])
+      ...(await serverSideTranslations(context.locale || "en", [
+        "common",
+        "home",
+      ])),
     },
-  }
+  };
 }
 
 export default function Home({ loggedInUser }: { loggedInUser: User }) {
-  const { setTheme } = useTheme();
-  const router = useRouter();
-  const { pathname, asPath, query } = router;
-  const {t, } = useTranslation()
+  const { t } = useTranslation();
+  const [isLoaded, setIsLoaded] = useState<false | true | null>(false);
+  const [folders, setFolders] = useState<Folder[]>([]);
+  const [notes, setNotes] = useState<Folder[]>([]);
+
+  useEffect(() => {
+    if (isLoaded === false) {
+      fetch("/api/folders-inside")
+        .then((res) => res.json())
+        .then((data) => setFolders(data))
+        .catch((err) => setIsLoaded(null));
+      fetch("/api/notes-inside")
+        .then((res) => res.json())
+        .then((data) => setNotes(data))
+        .catch((err) => setIsLoaded(null));
+      setIsLoaded(true);
+    }
+  }, [isLoaded]);
+
   return (
-    <div className={"app"} style={{ backgroundColor: "rgb(var(--md-sys-color-background))", color: "rgb(var(--md-sys-color-on-background))" }}>
-      <NavigationRail>
-        <NavigationRailItem active icon={mdiHome} text="Home" href="/" />
-        <NavigationRailItem icon={mdiPen} text="Write" href="/editor" />
-        <NavigationRailItem icon={mdiCreation} text="Chat" href="/chat" />
-        <NavigationRailItem icon={mdiCog} text="Settings" href="/settings" />
-      </NavigationRail>
+    <div
+      className={"app"}
+      style={{
+        backgroundColor: "rgb(var(--md-sys-color-background))",
+        color: "rgb(var(--md-sys-color-on-background))",
+      }}
+    >
+      <SharedNavBar active="/" />
       <main
         style={{
-          padding: 16
+          padding: 16,
         }}
       >
-        <Link href={'dashboard/userManagement'}>Dashboard</Link><br />
-        <Link href={'dashboard/login'}>Login</Link><br />
-        <button className="tonal" onClick={() => {
-          fetch('/api/logout', {
-            method: 'POST',
+        <h1 className="display-medium">{t("home:title")}</h1>
+        <div className={styles.filesGrid}>
+          {
+            isLoaded === false && <Spinner />
+          }
+          {
+          folders.map((folder) => {
+            return (
+              <div className={styles.file} key={folder.id}>
+                <Icon path={mdiFolder}/>
+                <a href={`/folder/${folder.id}`}>{folder.nazwa}</a>
+              </div>
+            )
           })
-        }}><div className="state">
-            Logout</div></button><br />
-
-        {/* {JSON.stringify(loggedInUser)} */}
-        <br />
-        Change lang ({router.locale}):
-        <Switch icon={mdiCog}  checked={router.locale === "en"} onChange={(e)=>{
-            console.log(e.currentTarget.checked ? "en" : "pl", router.locale, e.currentTarget.checked)
-            router.push({ pathname, query }, asPath, {
-              locale: e.currentTarget.checked ? "en" : "pl",
-            });
-        }}/><br />
-        <br />
-        <button className="filled">
-          <div className="state">Test button</div>
-        </button> <br />
-        <button className="text">
-          <div className="state">Test button2</div>
-        </button> <br />
-        <button className="outlined">
-          <div className="state"><Icon path={mdiCog}/> Test button2</div>
-        </button> <br /><br />
-        <div className="input-container">
-
-          <input placeholder="Label text" type="text" />
-          <span className="label-text">Label text</span>
-        </div><br /><br />
-        <div className="outlined-input-container">
-
-          <input onChange={(e) => ['green-dark', 'green-dark-medium-contrast', 'green-dark-high-contrast', 'green-light', 'green-light-medium-contrast', 'green-light-high-contrast'].includes(e.target.value) && setTheme(e.target.value)} placeholder="Label text" type="text" />
-          <span className="label-text">Label text</span>
-        </div><br /><br />
-        <label className="switch-container">
-          <input type="checkbox"/>
-          <span className="switch-slider"></span>
-        </label><br />
-        <p>
-          {JSON.stringify(loggedInUser) || "no user"}
-        </p>
+        }
+        {
+          notes.map((note) => {
+            return (
+              <div className={styles.file} key={note.id}>
+                <Icon path={mdiFileDocument}/>
+                <a href={`/note/${note.id}`}>{note.nazwa}</a>
+              </div>
+            )
+          })
+        }
+        </div>
+        <FAB icon={mdiFolderPlus} text={t("home:newFolder")} onClick={() => {}}/>
       </main>
     </div>
-
   );
 }

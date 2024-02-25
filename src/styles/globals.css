@@ -37,6 +37,10 @@ main {
 h1, h2 {
     font-weight: 400;
 }
+
+a {
+    color: rgb(var(--md-sys-color-secondary));
+}
 /* main {
     height: 100vh;
 } */

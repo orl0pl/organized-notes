@@ -11,5 +11,8 @@
   },
   "title": "Ustawienia",
   "logged-in-as": "Zalogowano jako",
-  "logout": "Wyloguj się"
+  "logout": "Wyloguj się",
+  "admin-dashboard": {
+    "title": "Panel administratora"
+  }
 }
