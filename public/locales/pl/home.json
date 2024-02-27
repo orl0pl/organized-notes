@@ -1,4 +1,14 @@
 {
+  "created-by": "Utworzone przez: \"{{name}}\"",
+  "empty-folder": "To jest pusty folder",
+  "folder-more-info": "Więcej informacji o folderze",
+  "folder-no-tags": "Brak tagów w folderze",
+  "folder-tags": "Tagi folderu",
+  "inside-folder": "W folderze \"{{name}}\"",
   "newFolder": "Nowy folder",
+  "newNote": "Nowa notatka",
+  "tag-action": "Akcja",
+  "tag-key": "Klucz",
+  "tag-value": "Wartość",
   "title": "Przeglądaj foldery i notatki"
 }

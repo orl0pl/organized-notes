@@ -3,4 +3,5 @@ interface Folder {
     rodzic: number | null
     nazwa: string
     osoba: number
+    osoba_nazwa?: string
 }

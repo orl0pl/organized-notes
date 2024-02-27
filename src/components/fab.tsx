@@ -13,3 +13,11 @@ export default function FAB({icon, text, onClick}:{icon: string, text: string, o
     )
 
 }
+
+export function FabContainer({children}:{children: React.ReactNode}) {
+    return (
+        <div className="fab-container">
+            {children}
+        </div>
+    )
+}

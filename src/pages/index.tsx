@@ -9,8 +9,8 @@ import SharedNavBar from "@/components/sharedNavBar";
 import styles from "@/styles/Home.module.css";
 import { useEffect, useState } from "react";
 import Icon from "@mdi/react";
-import { mdiFileDocument, mdiFolder, mdiFolderPlus } from "@mdi/js";
-import FAB from "@/components/fab";
+import { mdiFileDocument, mdiFileDocumentPlus, mdiFolder, mdiFolderPlus } from "@mdi/js";
+import FAB, { FabContainer } from "@/components/fab";
 import Spinner from "@/components/spinner";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -87,7 +87,12 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           })
         }
         </div>
+        <FabContainer>
         <FAB icon={mdiFolderPlus} text={t("home:newFolder")} onClick={() => {}}/>
+          <FAB icon={mdiFileDocumentPlus} text={t("home:newNote")} onClick={() => {}}/>
+        </FabContainer>
+          
+        
       </main>
     </div>
   );

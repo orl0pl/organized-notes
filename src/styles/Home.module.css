@@ -16,6 +16,10 @@
     background-color: rgb(var(--md-sys-color-surface-container));
 }
 
+.file:hover {
+    background-color: rgb(var(--md-sys-color-surface-variant));
+}
+
 
 .file svg {
     width: 24px;
@@ -30,4 +34,23 @@
 
 .file a:hover {
     text-decoration: underline;
+}
+
+.details {
+    border: 1px solid rgb(var(--md-sys-color-outline-variant));
+    background-color: rgb(var(--md-sys-color-surface-container));
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    margin: 0.75rem 0px;
+}
+
+.tagsTable {
+    background-color: rgb(var(--md-sys-color-surface-container-high));
+    padding: 0.75rem;
+    border-collapse: collapse;
+}
+
+.tagsTable td, .tagsTable th {
+    padding: 0.5rem;
+    border: 1px solid rgb(var(--md-sys-color-outline-variant));
 }
