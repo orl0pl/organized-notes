@@ -31,7 +31,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
             }
             const result = await db.query(
                 `INSERT INTO Folder (rodzic, nazwa, osoba) VALUES ($1, $2, $3) RETURNING *;`,
-                [rodzic, nazwa, user.id]
+                [rodzic || req.query.id, nazwa, user.id]
             );
 
             res.status(201).json(result.rows[0]);

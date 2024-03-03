@@ -43,9 +43,12 @@ export async function sessionServerSideProps({ req, res }: GetServerSidePropsCon
 
 export async function verifySessionInApi(req: NextApiRequest, res: NextApiResponse) {
   const session = req.cookies.session_id || req.body.session_id || req.query.session_id || null;
+
+  console.log(session) // DEBUG REMOVE
   
 	const sessionInDb = await db.query(`SELECT * FROM Sesja WHERE id = $1`, [session]);
   
+  console.log(sessionInDb.rows)
 
 	if (sessionInDb.rows.length === 0) {
 		res.status(401).json({ message: "Invalid session" });

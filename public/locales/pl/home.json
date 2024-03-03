@@ -1,7 +1,16 @@
 {
+  "changeFolderName": "Zmień nazwę folderu",
+  "common": {
+    "delete": "Usuń"
+  },
   "created-by": "Utworzone przez: \"{{name}}\"",
+  "delete": "Usuń",
+  "deleteFolder": "Usuń folder",
+  "deleteFolderWarning": "Folder zostanie usunięty na zawszę, nie ma możliwości przywrócenia go.",
+  "edit-name": "Zmień nazwę",
   "empty-folder": "To jest pusty folder",
   "folder-more-info": "Więcej informacji o folderze",
+  "folder-name": "Nazwa folderu",
   "folder-no-tags": "Brak tagów w folderze",
   "folder-tags": "Tagi folderu",
   "inside-folder": "W folderze \"{{name}}\"",

@@ -54,3 +54,9 @@
     padding: 0.5rem;
     border: 1px solid rgb(var(--md-sys-color-outline-variant));
 }
+
+.rowWithGap {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}

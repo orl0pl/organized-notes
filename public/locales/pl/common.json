@@ -1,7 +1,11 @@
 {
   "button": "Przycisk",
+  "cancel": "Anuluj",
   "chat": "Czat",
+  "delete": "Usuń",
+  "edit": "Edytuj",
   "editor": "Edytor",
   "home": "Przeglądaj",
+  "save": "Zapisz",
   "settings": "Ustawienia"
 }

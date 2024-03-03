@@ -27,7 +27,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         // Create a folder
         const { klucz, wartosc } = body;
         try {
-            if (folderOwner.rows[0].osoba !== user.id && !user.administrator || !user.edytowanieFolderow) {
+            if (folderOwner.rows[0].osoba !== user.id && !user.administrator && !user.edytowanieFolderow) {
                 res.status(401).json({ message: "Unauthorized" });
                 return;
             }
@@ -61,7 +61,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
         }
     } else if (method === 'DELETE') {
         try {
-            if (folderOwner.rows[0].osoba !== user.id || !user.administrator || !user.edytowanieFolderow) {
+            if (folderOwner.rows[0].osoba !== user.id && !user.administrator &&!user.edytowanieFolderow) {
                 res.status(401).json({ message: "Unauthorized" });
                 return;
             }
@@ -74,7 +74,7 @@ export default async function folderHandler(req: NextApiRequest, res: NextApiRes
 
     } else if (method === 'PUT') {
         try {
-            if (folderOwner.rows[0].osoba !== user.id || !user.administrator || !user.edytowanieFolderow) {
+            if (folderOwner.rows[0].osoba !== user.id && !user.administrator && !user.edytowanieFolderow) {
                 res.status(401).json({ message: "Unauthorized" });
                 return;
             }

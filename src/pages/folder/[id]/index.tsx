@@ -21,6 +21,7 @@ import FAB, { FabContainer } from "@/components/fab";
 import Spinner from "@/components/spinner";
 import Button from "@/components/button";
 import { Input } from "@/components/input";
+import { Modal, ModalActions } from "@/components/modal";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await sessionServerSideProps(context);
@@ -53,6 +54,10 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
   const [folderName, setFolderName] = useState("");
   const [notes, setNotes] = useState<Folder[]>([]);
   const [detailsShown, setDetailsShown] = useState(false);
+  const [addFolderModalOpen, setAddFolderModalOpen] = useState(false);
+  const [changeFolderNameModalOpen, setChangeFolderNameModalOpen] =
+    useState(false);
+  const [deleteFolderModalOpen, setDeleteFolderModalOpen] = useState(false);
 
   useEffect(() => {
     if (isLoaded === false) {
@@ -92,9 +97,11 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
       >
         <h1 className="display-small">{t("home:title")}</h1>
         {currentFolder !== undefined && (
-          <h2 className="title-large">
-            {t("home:inside-folder", { name: currentFolder.nazwa })}
-          </h2>
+          <div>
+            <h2 className="title-large">
+              {t("home:inside-folder", { name: currentFolder.nazwa })}
+            </h2>
+          </div>
         )}
         <span
           className="title-small"
@@ -112,37 +119,59 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           <div className={styles.details}>
             <span>
               {t("home:created-by", { name: currentFolder?.osoba_nazwa })}
-            </span><br />
+            </span>
+            <div className={styles.rowWithGap}>
+              <Button
+                displayType={"tonal"}
+                onClick={() => setChangeFolderNameModalOpen(true)}
+              >
+                {t("home:edit-name")}
+              </Button>
+              <Button
+                displayType={"tonal"}
+                onClick={() => setDeleteFolderModalOpen(true)}
+              >
+                {t("home:delete")}
+              </Button>
+            </div>
+            <br />
             <span className="title-small">{t("home:folder-tags")}</span>
             <table className={styles.tagsTable}>
               <thead>
                 <tr>
                   <th className="label-large">{t("home:tag-key")}</th>
                   <th className="label-large">{t("home:tag-value")}</th>
-				  <th className="label-large">{t("home:tag-action")}</th>
+                  <th className="label-large">{t("home:tag-action")}</th>
                 </tr>
               </thead>
               <tbody>
-				{currentFolderTags.length === 0 && currentFolder && <tr><td colSpan={3}>{t("home:folder-no-tags")}</td></tr>}
+                {currentFolderTags.length === 0 && currentFolder && (
+                  <tr>
+                    <td colSpan={3}>{t("home:folder-no-tags")}</td>
+                  </tr>
+                )}
                 {currentFolderTags.map((tag) => (
                   <tr key={tag.klucz}>
                     <td>{tag.klucz}</td>
                     <td>{tag.wartosc}</td>
                     <td>
                       <Button
-								onClick={() => {
-									fetch("/api/folder-tags/" + router.query.id, {
-										method: "PUT",
-										headers: {
-											"Content-Type": "application/json",
-										},
-										body: JSON.stringify({
-											klucz: tag.klucz,
-											wartosc: tagValue,
-										}),
-									});
-								} } displayType={"text"}                      >
-                        Edit
+                        onClick={() => {
+                          fetch("/api/folder-tags/" + router.query.id, {
+                            method: "PUT",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              klucz: tag.klucz,
+                              wartosc: tagValue,
+                            }),
+                          });
+                          setIsLoaded(false);
+                        }}
+                        displayType={"text"}
+                      >
+                        {t("common:edit")}
                       </Button>
                       <button
                         onClick={() => {
@@ -155,9 +184,10 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
                               klucz: tag.klucz,
                             }),
                           });
+                          setIsLoaded(false);
                         }}
                       >
-                        Delete
+                        {t("common:delete")}
                       </button>
                     </td>
                   </tr>
@@ -168,7 +198,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
                       type="text"
                       name="key"
                       value={tagKey}
-					  placeholder={t("home:tag-key")}
+                      placeholder={t("home:tag-key")}
                       onChange={(e) => setTagKey(e.target.value)}
                     />
                   </td>
@@ -177,7 +207,7 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
                       type="text"
                       name="value"
                       value={tagValue}
-					  placeholder={t("home:tag-value")}
+                      placeholder={t("home:tag-value")}
                       onChange={(e) => setTagValue(e.target.value)}
                     />
                   </td>
@@ -193,14 +223,14 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
                             klucz: tagKey,
                             wartosc: tagValue,
                           }),
-						}).catch((err) => {
-							alert(err);
-						});
-						setTagKey("");
-						setTagValue("");
-						setIsLoaded(false);
+                        }).catch((err) => {
+                          alert(err);
+                        });
+                        setTagKey("");
+                        setTagValue("");
+                        setIsLoaded(false);
                       }}
-					  displayType={"tonal"}
+                      displayType={"tonal"}
                     >
                       Add
                     </Button>
@@ -236,7 +266,9 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           <FAB
             icon={mdiFolderPlus}
             text={t("home:newFolder")}
-            onClick={() => {}}
+            onClick={() => {
+              setAddFolderModalOpen(true);
+            }}
           />
           <FAB
             icon={mdiFileDocumentPlus}
@@ -245,6 +277,68 @@ export default function Home({ loggedInUser }: { loggedInUser: User }) {
           />
         </FabContainer>
       </main>
+      {addFolderModalOpen && (
+        <Modal
+          dissmissOnBackgroundClick
+          hideModal={() => setAddFolderModalOpen(false)}
+        >
+          <h1>{t("home:newFolder")}</h1>
+          <Input
+            displayType="filled"
+            placeholder={t("home:folder-name")}
+          ></Input>
+          <br />
+          <ModalActions>
+            <Button
+              displayType="outlined"
+              onClick={() => setAddFolderModalOpen(false)}
+            >
+              {t("common:cancel")}
+            </Button>
+            <Button displayType="filled">{t("common:save")}</Button>
+          </ModalActions>
+        </Modal>
+      )}
+      {changeFolderNameModalOpen && (
+        <Modal
+          dissmissOnBackgroundClick
+          hideModal={() => setChangeFolderNameModalOpen(false)}
+        >
+          <h1>{t("home:changeFolderName")}</h1>
+          <Input
+            displayType="filled"
+            placeholder={t("home:folder-name")}
+          ></Input>
+          <br />
+          <ModalActions>
+            <Button
+              displayType="outlined"
+              onClick={() => setChangeFolderNameModalOpen(false)}
+            >
+              {t("common:cancel")}
+            </Button>
+            <Button displayType="filled">{t("common:save")}</Button>
+          </ModalActions>
+        </Modal>
+      )}
+      {deleteFolderModalOpen && (
+        <Modal
+          dissmissOnBackgroundClick
+          hideModal={() => setDeleteFolderModalOpen(false)}
+        >
+          <h1>{t("home:deleteFolder")}</h1>
+          <p>{t("home:deleteFolderWarning")}</p>
+          <ModalActions>
+            <Button
+              displayType="outlined"
+              onClick={() => setDeleteFolderModalOpen(false)}
+            >
+              {t("common:cancel")}
+            </Button>
+            <Button displayType="filled">{t("common:delete")}</Button>
+          </ModalActions>
+        </Modal>
+      )}
     </div>
   );
 }
